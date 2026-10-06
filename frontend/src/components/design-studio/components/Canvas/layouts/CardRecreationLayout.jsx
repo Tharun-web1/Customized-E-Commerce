@@ -172,11 +172,11 @@ export default function CardRecreationLayout({
   }
 
   const bgColor = tJson?.background?.color || activeTemplate?.text_positions?.backgroundColor || '#151b2d';
-  const logoInitials = tJson?.assets?.logo?.initials || activeTemplate?.text_positions?.logoInitials || 'RR';
+  const logoInitials = tJson?.assets?.logo?.initials || activeTemplate?.text_positions?.logoInitials || 'BC';
   const accentColor = activeTemplate?.text_positions?.accentColor || '#38bdf8';
   const badgeBg = activeTemplate?.text_positions?.swooshColor || '#1e3a8a';
   const hasQr = tJson?.assets?.qr?.enabled ?? (activeTemplate?.text_positions?.hasQrCode !== false);
-  const websiteVal = tJson?.content?.website?.text || activeTemplate?.text_positions?.sampleWebsite || 'www.rrgobalitservice.com';
+  const websiteVal = tJson?.content?.website?.text || activeTemplate?.text_positions?.sampleWebsite || 'www.example.com';
 
   return (
     <div
@@ -239,7 +239,7 @@ export default function CardRecreationLayout({
         {/* Name, Designation & Accent Underline */}
         <div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', flexWrap: 'wrap' }}>
-            {renderCanvasElement('fullName', activeTemplate?.sample_name || 'Ravindra', {
+            {renderCanvasElement('fullName', activeTemplate?.sample_name || 'Cardholder Name', {
               fontSize: 22,
               fontWeight: 800,
               color: '#ffffff',
@@ -248,7 +248,7 @@ export default function CardRecreationLayout({
             }, isPreview)}
 
             <div style={{ marginTop: '2px' }}>
-              {renderCanvasElement('jobTitle', activeTemplate?.sample_job_title || 'Manager', {
+              {renderCanvasElement('jobTitle', activeTemplate?.sample_job_title || 'Designation', {
                 fontSize: 13,
                 fontWeight: 600,
                 color: '#94a3b8',
@@ -299,7 +299,7 @@ export default function CardRecreationLayout({
                 <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.72 11.72 0 003.68.59 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.72 11.72 0 00.59 3.68 1 1 0 01-.24 1.02l-2.23 2.09z" />
               </svg>
             </div>
-            {renderCanvasElement('phone', activeTemplate?.sample_phone || '6300297048, 9948257919', {
+            {renderCanvasElement('phone', activeTemplate?.sample_phone || '+1 555-0199', {
               fontSize: 11,
               fontWeight: 600,
               color: '#f8fafc',
@@ -325,7 +325,7 @@ export default function CardRecreationLayout({
                 <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
               </svg>
             </div>
-            {renderCanvasElement('email', activeTemplate?.sample_email || 'info.rrgobalitservice.com', {
+            {renderCanvasElement('email', activeTemplate?.sample_email || 'contact@domain.com', {
               fontSize: 11,
               color: '#e2e8f0',
             }, isPreview)}
@@ -351,7 +351,7 @@ export default function CardRecreationLayout({
                 <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" />
               </svg>
             </div>
-            {renderCanvasElement('address1', activeTemplate?.text_positions?.sampleAddress || '13th Floor, Manjeera Trinity Corporate, KPHB, Hyderabad.', {
+            {renderCanvasElement('address1', activeTemplate?.text_positions?.sampleAddress || '123 Business Avenue, Suite 100', {
               fontSize: 10,
               color: '#cbd5e1',
             }, isPreview)}
@@ -432,7 +432,7 @@ export default function CardRecreationLayout({
 
           {/* Company Name */}
           <div style={{ marginTop: 6, textAlign: 'center', width: '100%' }}>
-            {renderCanvasElement('companyName', activeTemplate?.sample_company || 'IT SERVICES', {
+            {renderCanvasElement('companyName', activeTemplate?.sample_company || 'COMPANY NAME', {
               fontSize: 15,
               fontWeight: 800,
               color: '#ffffff',

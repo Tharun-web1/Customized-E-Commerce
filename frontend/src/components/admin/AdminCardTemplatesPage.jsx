@@ -258,9 +258,39 @@ export default function AdminCardTemplatesPage({
               {/* Template Meta and Actions */}
               <div className="card-template-info">
                 <div>
-                  <div className="card-template-meta">
+                  <div className="card-template-meta" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px' }}>
                     <h4 className="card-template-title">{tpl.title}</h4>
-                    <span className="card-template-industry-tag">{tpl.industry}</span>
+                    <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+                      <span className="card-template-industry-tag">{tpl.industry}</span>
+                      <span
+                        style={{
+                          fontSize: '0.68rem',
+                          fontWeight: 800,
+                          padding: '2px 6px',
+                          borderRadius: 4,
+                          background: (tpl.text_positions?.status || 'APPROVED') === 'PUBLISHED' ? '#ecfdf5' : '#eff6ff',
+                          color: (tpl.text_positions?.status || 'APPROVED') === 'PUBLISHED' ? '#059669' : '#2563eb',
+                          border: `1px solid ${(tpl.text_positions?.status || 'APPROVED') === 'PUBLISHED' ? '#a7f3d0' : '#bfdbfe'}`,
+                        }}
+                      >
+                        {tpl.text_positions?.status || (tpl.text_positions?.card_recreation ? 'PUBLISHED' : 'APPROVED')}
+                      </span>
+                      {tpl.text_positions?.similarityScore && (
+                        <span
+                          style={{
+                            fontSize: '0.68rem',
+                            fontWeight: 800,
+                            padding: '2px 5px',
+                            borderRadius: 4,
+                            background: '#f0fdf4',
+                            color: '#15803d',
+                            border: '1px solid #bbf7d0',
+                          }}
+                        >
+                          {tpl.text_positions.similarityScore}%
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <div className="card-template-specs">
                     <span>{tpl.orientation === 'vertical' ? 'Vertical' : 'Horizontal'}</span>

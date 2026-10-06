@@ -459,7 +459,7 @@ export default function TemplateCardMockup({ template, onSelect }) {
                       lineHeight: 1.1,
                     }}
                   >
-                    {template.sample_name || 'Ravindra'}
+                    {template.sample_name || 'Cardholder Name'}
                   </span>
                   <span
                     style={{
@@ -469,7 +469,7 @@ export default function TemplateCardMockup({ template, onSelect }) {
                       textTransform: 'capitalize',
                     }}
                   >
-                    {template.sample_job_title || 'Manager'}
+                    {template.sample_job_title || 'Designation'}
                   </span>
                 </div>
                 {/* Thin Underline Accent */}
@@ -505,7 +505,7 @@ export default function TemplateCardMockup({ template, onSelect }) {
                     📞
                   </div>
                   <div style={{ fontWeight: 600, lineHeight: 1.2, color: '#f8fafc' }}>
-                    {(template.sample_phone || '6300297048, 9948257919')
+                    {(template.sample_phone || '+1 555-0199')
                       .split(',')
                       .map((p, idx) => (
                         <div key={idx}>{p.trim()}</div>
@@ -531,7 +531,7 @@ export default function TemplateCardMockup({ template, onSelect }) {
                   >
                     ✉️
                   </div>
-                  <span style={{ color: '#e2e8f0' }}>{template.sample_email || 'info.rrgobalitservice.com'}</span>
+                  <span style={{ color: '#e2e8f0' }}>{template.sample_email || 'contact@domain.com'}</span>
                 </div>
 
                 {/* Address */}
@@ -554,7 +554,7 @@ export default function TemplateCardMockup({ template, onSelect }) {
                     📍
                   </div>
                   <div style={{ lineHeight: 1.25, color: '#cbd5e1', fontSize: '0.44rem' }}>
-                    {(template.text_positions?.sampleAddress || '13th Floor, Manjeera Trinity Corporate, KPHB, Hyderabad.')
+                    {(template.text_positions?.sampleAddress || '123 Business Avenue, Suite 100')
                       .split(',')
                       .map((part, idx) => (
                         <div key={idx}>{part.trim()}</div>
@@ -613,7 +613,7 @@ export default function TemplateCardMockup({ template, onSelect }) {
                       zIndex: 2,
                     }}
                   >
-                    {template.text_positions?.logoInitials || 'RR'}
+                    {template.text_positions?.logoInitials || 'BC'}
                   </span>
                 </div>
 
@@ -629,14 +629,14 @@ export default function TemplateCardMockup({ template, onSelect }) {
                     textTransform: 'uppercase',
                   }}
                 >
-                  {template.sample_company || 'IT SERVICES'}
+                  {template.sample_company || 'COMPANY NAME'}
                 </div>
               </div>
 
               {/* QR Code */}
               <div style={{ margin: '3px 0' }}>
                 <QrCodeBadge
-                  url={template.text_positions?.sampleWebsite || template.sample_email || 'www.rrgobalitservice.com'}
+                  url={template.text_positions?.sampleWebsite || template.sample_email || 'https://example.com'}
                   size={42}
                 />
               </div>
@@ -653,7 +653,7 @@ export default function TemplateCardMockup({ template, onSelect }) {
                 }}
               >
                 <span>🌐</span>
-                <span>{template.text_positions?.sampleWebsite || template.sample_web || 'www.rrgobalitservice.com'}</span>
+                <span>{template.text_positions?.sampleWebsite || template.sample_web || 'www.example.com'}</span>
               </div>
             </div>
           </div>

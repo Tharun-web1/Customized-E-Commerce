@@ -179,18 +179,18 @@ export default function VistaprintDesignStudio({
     }
     if (isCustomMode) return {};
     return {
-      companyName: card?.custom_company || resolvedTemplate?.sample_company || (resolvedTemplate?.layout_type === 'card_recreation' ? 'IT SERVICES' : (resolvedTemplate?.layout_type === 'executive_swoosh' ? 'Your Company' : '')),
+      companyName: card?.custom_company || resolvedTemplate?.sample_company || (resolvedTemplate?.layout_type === 'executive_swoosh' ? 'Your Company' : ''),
       companyMessage: card?.custom_message || resolvedTemplate?.sample_tagline || '',
-      fullName: card?.custom_name || resolvedTemplate?.sample_name || (resolvedTemplate?.layout_type === 'card_recreation' ? 'Ravindra' : (resolvedTemplate?.layout_type === 'executive_swoosh' ? 'Your Name' : '')),
-      jobTitle: card?.custom_title || resolvedTemplate?.sample_job_title || (resolvedTemplate?.layout_type === 'card_recreation' ? 'Manager' : (resolvedTemplate?.layout_type === 'executive_swoosh' ? 'General Manager' : '')),
-      email: card?.custom_email || resolvedTemplate?.sample_email || (resolvedTemplate?.layout_type === 'card_recreation' ? 'info.rrgobalitservice.com' : (resolvedTemplate?.layout_type === 'executive_swoosh' ? 'info@example.com' : '')),
-      address1: card?.custom_address1 || (resolvedTemplate?.text_positions?.sampleAddress || (resolvedTemplate?.layout_type === 'card_recreation' ? '13th Floor, Manjeera Trinity Corporate, KPHB, Hyderabad.' : (resolvedTemplate?.layout_type === 'executive_swoosh' ? 'City, Country' : ''))),
+      fullName: card?.custom_name || resolvedTemplate?.sample_name || (resolvedTemplate?.layout_type === 'executive_swoosh' ? 'Your Name' : ''),
+      jobTitle: card?.custom_title || resolvedTemplate?.sample_job_title || (resolvedTemplate?.layout_type === 'executive_swoosh' ? 'General Manager' : ''),
+      email: card?.custom_email || resolvedTemplate?.sample_email || (resolvedTemplate?.layout_type === 'executive_swoosh' ? 'info@example.com' : ''),
+      address1: card?.custom_address1 || resolvedTemplate?.text_positions?.sampleAddress || (resolvedTemplate?.layout_type === 'executive_swoosh' ? 'City, Country' : ''),
       address2: card?.custom_address2 || '',
-      web: card?.custom_web || (resolvedTemplate?.text_positions?.sampleWebsite || (resolvedTemplate?.layout_type === 'card_recreation' ? 'www.rrgobalitservice.com' : (resolvedTemplate?.layout_type === 'executive_swoosh' ? 'www.example.com' : ''))),
-      phone: card?.custom_phone || resolvedTemplate?.sample_phone || (resolvedTemplate?.layout_type === 'card_recreation' ? '6300297048, 9948257919' : (resolvedTemplate?.layout_type === 'executive_swoosh' ? '+91 98765 43210' : '')),
-      bullet1: resolvedTemplate?.text_positions?.bullet1 || 'We Build',
-      bullet2: resolvedTemplate?.text_positions?.bullet2 || 'We Launch',
-      bullet3: resolvedTemplate?.text_positions?.bullet3 || 'We Grow',
+      web: card?.custom_web || resolvedTemplate?.text_positions?.sampleWebsite || (resolvedTemplate?.layout_type === 'executive_swoosh' ? 'www.example.com' : ''),
+      phone: card?.custom_phone || resolvedTemplate?.sample_phone || (resolvedTemplate?.layout_type === 'executive_swoosh' ? '+91 98765 43210' : ''),
+      bullet1: resolvedTemplate?.text_positions?.bullet1 || '',
+      bullet2: resolvedTemplate?.text_positions?.bullet2 || '',
+      bullet3: resolvedTemplate?.text_positions?.bullet3 || '',
     };
   });
 

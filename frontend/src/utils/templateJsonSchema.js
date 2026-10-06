@@ -15,7 +15,7 @@ export function generateElementId(prefix = 'el') {
 }
 
 /**
- * Builds the canonical Template JSON from Computer Vision & OCR results
+ * Builds the canonical Template JSON dynamically from Computer Vision & OCR results
  */
 export function buildCanonicalTemplateJson({
   cardAnalysis = {},
@@ -40,35 +40,21 @@ export function buildCanonicalTemplateJson({
       : 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)'),
     theme: isDark ? 'dark' : 'light',
     palette: bg.palette || (isDark ? ['#151b2d', '#2563eb', '#fbbf24', '#38bdf8'] : ['#ffffff', '#0056b3', '#1e293b', '#eab308']),
-    cleanArtworkSrc: cardAnalysis.cleanArtworkSrc || '',
-    accents: [
-      {
-        id: generateElementId('acc'),
-        type: 'polygon',
-        position: 'top-right',
-        clipPath: 'polygon(100% 0, 0 0, 100% 100%)',
-        background: 'linear-gradient(225deg, rgba(37, 99, 235, 0.35) 0%, rgba(30, 58, 138, 0.1) 60%, transparent 100%)',
-      },
-      {
-        id: generateElementId('acc'),
-        type: 'polygon',
-        position: 'bottom-center',
-        clipPath: 'polygon(0 100%, 30% 0, 100% 100%)',
-        background: 'linear-gradient(45deg, rgba(30, 58, 138, 0.25) 0%, transparent 100%)',
-      },
-    ],
+    cleanArtworkSrc: cardAnalysis.cleanArtworkSrc || bg.cleanArtworkSrc || '',
+    accents: [],
   };
 
   const content = cardAnalysis.content || {};
   const assets = cardAnalysis.assets || {};
+  const elements = [];
 
-  const elements = [
-    // 1. Person Name
-    {
+  // 1. Person Name (Only if present)
+  if (content.personName) {
+    elements.push({
       id: generateElementId('text'),
       type: 'text',
       field: 'personName',
-      content: content.personName || 'Ravindra',
+      content: content.personName,
       x: content.nameBox?.x || 70,
       y: content.nameBox?.y || 60,
       width: content.nameBox?.width || 280,
@@ -78,17 +64,19 @@ export function buildCanonicalTemplateJson({
       fontWeight: '800',
       color: textColor,
       alignment: 'left',
-      confidence: content.nameConfidence || 0.96,
+      confidence: content.nameConfidence || 0.95,
       editable: true,
       locked: false,
-    },
+    });
+  }
 
-    // 2. Job Designation
-    {
+  // 2. Job Designation (Only if present)
+  if (content.jobTitle) {
+    elements.push({
       id: generateElementId('text'),
       type: 'text',
       field: 'designation',
-      content: content.jobTitle || 'Manager',
+      content: content.jobTitle,
       x: content.titleBox?.x || 70,
       y: content.titleBox?.y || 110,
       width: content.titleBox?.width || 220,
@@ -101,29 +89,17 @@ export function buildCanonicalTemplateJson({
       confidence: content.titleConfidence || 0.92,
       editable: true,
       locked: false,
-    },
+    });
+  }
 
-    // 3. Accent Divider Line
-    {
-      id: generateElementId('shape'),
-      type: 'shape',
-      shapeType: 'line',
-      x: 70,
-      y: 150,
-      width: 70,
-      height: 3,
-      fill: bg.accentColor || '#38bdf8',
-      editable: true,
-      locked: false,
-    },
-
-    // 4. Contact: Phones
-    {
+  // 3. Contact: Phones (Only if present)
+  if (content.phone) {
+    elements.push({
       id: generateElementId('contact'),
       type: 'contact',
       field: 'phone',
       iconType: 'phone',
-      content: content.phone || '6300297048, 9948257919',
+      content: content.phone,
       x: 70,
       y: 330,
       width: 320,
@@ -137,15 +113,17 @@ export function buildCanonicalTemplateJson({
       confidence: content.phoneConfidence || 0.98,
       editable: true,
       locked: false,
-    },
+    });
+  }
 
-    // 5. Contact: Email
-    {
+  // 4. Contact: Email (Only if present)
+  if (content.email) {
+    elements.push({
       id: generateElementId('contact'),
       type: 'contact',
       field: 'email',
       iconType: 'email',
-      content: content.email || 'info.rrgobalitservice.com',
+      content: content.email,
       x: 70,
       y: 385,
       width: 320,
@@ -159,15 +137,17 @@ export function buildCanonicalTemplateJson({
       confidence: content.emailConfidence || 0.95,
       editable: true,
       locked: false,
-    },
+    });
+  }
 
-    // 6. Contact: Address
-    {
+  // 5. Contact: Address (Only if present)
+  if (content.address) {
+    elements.push({
       id: generateElementId('contact'),
       type: 'contact',
       field: 'address',
       iconType: 'address',
-      content: content.address || '13th Floor, Manjeera Trinity Corporate, KPHB, Hyderabad.',
+      content: content.address,
       x: 70,
       y: 440,
       width: 360,
@@ -181,33 +161,16 @@ export function buildCanonicalTemplateJson({
       confidence: content.addressConfidence || 0.88,
       editable: true,
       locked: false,
-    },
+    });
+  }
 
-    // 7. Logo Asset / Monogram Emblem
-    {
-      id: generateElementId('logo'),
-      type: 'logo',
-      field: 'companyLogo',
-      logoType: assets.logoType || 'emblem',
-      initials: assets.logoInitials || 'RR',
-      src: assets.logoSrc || '',
-      x: 750,
-      y: 50,
-      width: 120,
-      height: 120,
-      color: '#fbbf24',
-      bgGradient: 'radial-gradient(circle at 35% 35%, #2563eb 0%, #1e3a8a 70%, #0f172a 100%)',
-      confidence: 0.94,
-      editable: true,
-      locked: false,
-    },
-
-    // 8. Company Name
-    {
+  // 6. Company Name (Only if present)
+  if (content.companyName) {
+    elements.push({
       id: generateElementId('text'),
       type: 'text',
       field: 'companyName',
-      content: content.companyName || 'IT SERVICES',
+      content: content.companyName,
       x: 700,
       y: 185,
       width: 220,
@@ -221,15 +184,17 @@ export function buildCanonicalTemplateJson({
       confidence: content.companyConfidence || 0.91,
       editable: true,
       locked: false,
-    },
+    });
+  }
 
-    // 9. QR Code Asset
-    {
+  // 7. QR Code (Only if present)
+  if (assets.hasQrCode && (assets.qrValue || content.website)) {
+    elements.push({
       id: generateElementId('qr'),
       type: 'qr',
       field: 'qrCode',
-      value: content.website || content.email || 'https://www.rrgobalitservice.com',
-      enabled: assets.hasQrCode !== false,
+      value: assets.qrValue || content.website || 'https://example.com',
+      enabled: true,
       x: 760,
       y: 250,
       width: 100,
@@ -237,41 +202,51 @@ export function buildCanonicalTemplateJson({
       confidence: 0.99,
       editable: true,
       locked: false,
-    },
+    });
+  }
 
-    // 10. Website URL
-    {
-      id: generateElementId('text'),
-      type: 'text',
-      field: 'website',
-      iconType: 'globe',
-      content: content.website || 'www.rrgobalitservice.com',
-      x: 690,
-      y: 375,
-      width: 240,
-      height: 30,
-      fontSize: 13,
-      fontFamily: 'Inter, sans-serif',
-      fontWeight: '600',
-      color: '#93c5fd',
-      alignment: 'center',
-      confidence: content.webConfidence || 0.96,
+  // 8. Logo Asset (Only if present)
+  if (assets.logoSrc || assets.logoInitials) {
+    elements.push({
+      id: generateElementId('logo'),
+      type: 'logo',
+      field: 'companyLogo',
+      logoType: assets.logoType || 'emblem',
+      initials: assets.logoInitials || '',
+      src: assets.logoSrc || '',
+      x: 750,
+      y: 50,
+      width: 120,
+      height: 120,
+      color: '#fbbf24',
+      bgGradient: 'radial-gradient(circle at 35% 35%, #2563eb 0%, #1e3a8a 70%, #0f172a 100%)',
+      confidence: 0.94,
       editable: true,
       locked: false,
-    },
-  ];
+    });
+  }
 
   return {
-    version: '2.0',
-    templateName: userMetadata.title || (content.companyName ? `${content.companyName} Template` : 'Reconstructed Business Card Template'),
-    industry: userMetadata.industry || 'Corporate & Business',
+    version: 1,
+    schema: 'vistaprint-canonical-v1',
+    timestamp: new Date().toISOString(),
     canvas,
     background,
     elements,
+    variables: {
+      personName: content.personName || '',
+      jobTitle: content.jobTitle || '',
+      companyName: content.companyName || '',
+      phone: content.phone || '',
+      email: content.email || '',
+      website: content.website || '',
+      address: content.address || '',
+    },
     metadata: {
-      similarityScore: 95.8,
-      detectedAt: new Date().toISOString(),
-      originalColors: background.palette,
+      title: userMetadata.title || 'Dynamic Template',
+      industry: userMetadata.industry || 'Corporate & Business',
+      cardId: userMetadata.cardId || null,
+      source: 'card_analysis',
     },
   };
 }

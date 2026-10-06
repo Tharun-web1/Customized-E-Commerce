@@ -54,7 +54,7 @@ export function parseVisitingCardText(rawText = '') {
   if (standardEmailMatch) {
     email = standardEmailMatch[0];
   } else {
-    // Handle OCR reading '@' as '.' e.g. info.rrgobalitservice.com
+    // Handle OCR reading '@' as '.' e.g. info.company.com
     const dotEmailMatch = cleanedRaw.match(/(?:info|contact|support|sales|mail|admin)\.[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/i);
     if (dotEmailMatch) {
       email = dotEmailMatch[0].replace(/^([a-zA-Z]+)\./, '$1@');
@@ -102,7 +102,7 @@ export function parseVisitingCardText(rawText = '') {
       jobTitle = match[0].charAt(0).toUpperCase() + match[0].slice(1).toLowerCase();
       titleLineIdx = idx;
 
-      // Check if person name is in the same line: "Ravindra Manager"
+      // Check if person name is in the same line: e.g. "Jane Doe Manager"
       const beforeTitle = cleanLine.substring(0, match.index).trim();
       if (beforeTitle.length >= 3 && /^[a-zA-Z\s.]+$/.test(beforeTitle)) {
         personName = beforeTitle;
@@ -147,44 +147,29 @@ export function parseVisitingCardText(rawText = '') {
   if (companyName && !/^[a-zA-Z]/.test(companyName)) {
     companyName = companyName.replace(/^[^a-zA-Z]+/, '');
   }
-  if (companyName && !companyName.toUpperCase().includes('RR') && rawText.includes('RR')) {
-    companyName = 'RR ' + companyName.toUpperCase();
-  }
-
   // If company name not directly recognized, infer from website or email domain
   if (!companyName && (website || email)) {
     const domainSource = website || email;
     const domainMatch = domainSource.match(/(?:www\.)?([a-zA-Z0-9-]+)\.(?:com|in|org|net)/i);
     if (domainMatch && domainMatch[1]) {
-      const dName = domainMatch[1].toLowerCase();
-      if (dName.includes('rrgobalitservice') || dName.includes('rrglobal')) {
-        companyName = 'RR IT SERVICES';
-      } else {
-        companyName = dName.charAt(0).toUpperCase() + dName.slice(1) + ' Services';
-      }
+      const dName = domainMatch[1];
+      companyName = dName.charAt(0).toUpperCase() + dName.slice(1);
     }
-  }
-
-  // Extra check: if line contains "IT SERVICES" but had prefix
-  if (companyName && !companyName.includes('RR') && rawText.includes('RR')) {
-    companyName = 'RR ' + companyName;
   }
 
   // 7. Logo Initials detection
   let logoInitials = '';
-  if (/rr\b|rrgobal|rrglobal/i.test(rawText + website + email)) {
-    logoInitials = 'RR';
-  } else if (companyName) {
-    const words = companyName.split(/\s+/).filter((w) => w.length > 1 && !/^(it|pvt|ltd|and|&|the)$/i.test(w));
+  if (companyName) {
+    const words = companyName.split(/\s+/).filter((w) => w.length > 1 && !/^(it|pvt|ltd|and|&|the|llc|inc)$/i.test(w));
     if (words.length >= 2) {
       logoInitials = (words[0][0] + words[1][0]).toUpperCase();
     } else if (words.length === 1 && words[0].length >= 2) {
       logoInitials = words[0].slice(0, 2).toUpperCase();
     } else {
-      logoInitials = (personName ? personName.slice(0, 2) : 'RR').toUpperCase();
+      logoInitials = (personName ? personName.slice(0, 2) : 'BC').toUpperCase();
     }
   } else {
-    logoInitials = (personName ? personName.slice(0, 2) : 'RR').toUpperCase();
+    logoInitials = (personName ? personName.slice(0, 2) : 'BC').toUpperCase();
   }
 
   const hasQrCode = Boolean(website || email || /qr|scan|code/i.test(rawText));
@@ -197,7 +182,7 @@ export function parseVisitingCardText(rawText = '') {
     email: email || '',
     website: website || '',
     address: address || '',
-    logoInitials: logoInitials || 'RR',
+    logoInitials: logoInitials || 'BC',
     hasQrCode,
   };
 }
@@ -264,41 +249,41 @@ export function buildTemplateJsonFromCardAnalysis({
     },
     content: {
       name: {
-        text: content.name || 'Ravindra',
+        text: content.name || '',
         fontSize: 22,
         fontWeight: 800,
         color: theme === 'light' ? '#0f172a' : '#ffffff',
       },
       designation: {
-        text: content.designation || 'Manager',
+        text: content.designation || '',
         fontSize: 13,
         fontWeight: 600,
         color: '#94a3b8',
       },
       company: {
-        text: content.company || 'IT SERVICES',
+        text: content.company || '',
         fontSize: 15,
         fontWeight: 800,
         color: theme === 'light' ? '#004b93' : '#ffffff',
       },
       phone: {
-        text: content.phone || '6300297048, 9948257919',
+        text: content.phone || '',
         fontSize: 11,
         fontWeight: 600,
         color: theme === 'light' ? '#1e293b' : '#f8fafc',
       },
       email: {
-        text: content.email || 'info.rrgobalitservice.com',
+        text: content.email || '',
         fontSize: 11,
         color: theme === 'light' ? '#1e293b' : '#e2e8f0',
       },
       address: {
-        text: content.address || '13th Floor, Manjeera Trinity Corporate, KPHB, Hyderabad.',
+        text: content.address || '',
         fontSize: 10,
         color: theme === 'light' ? '#475569' : '#cbd5e1',
       },
       website: {
-        text: content.website || 'www.rrgobalitservice.com',
+        text: content.website || '',
         fontSize: 10,
         color: '#93c5fd',
       },
@@ -306,14 +291,14 @@ export function buildTemplateJsonFromCardAnalysis({
     assets: {
       logo: {
         type: assets.logoType || 'emblem',
-        initials: assets.logoInitials || 'RR',
+        initials: assets.logoInitials || '',
         icon: 'globe',
         color: '#fbbf24',
         bg: 'radial-gradient(circle at 35% 35%, #2563eb 0%, #1e3a8a 70%, #0f172a 100%)',
       },
       qr: {
         enabled: assets.hasQrCode !== false,
-        url: content.website || content.email || 'https://www.rrgobalitservice.com',
+        url: content.website || content.email || '',
         size: 46,
       },
       icons: [

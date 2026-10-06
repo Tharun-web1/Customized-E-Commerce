@@ -1,48 +1,69 @@
 /**
- * Template Builder Service
+ * Generic Template Builder Service
  * 
- * Assembles the Canonical Hybrid Template JSON schema from preprocessed and segmented layers.
+ * Assembles the Canonical Template JSON schema from preprocessed and segmented layers.
  * 
- * Architecture Principle:
- * - Hybrid Layer Composition:
- *   - Layer 0: Pristine Inpainted Background Graphic (preserves ALL gradients, angles, lines, patterns)
- *   - Layer 1: Logo Asset (extracted image or transparent emblem, editable and movable)
- *   - Layer 2: Dynamic QR Code (exact coordinates, decodeable and editable)
- *   - Layer 3+: Editable Typography Elements (exact x, y, width, height, font size, weight, color, alignment)
- * - Initial Display: Default text matches the original card 1:1, so the template visually reproduces the card.
- * - Template Variables: Bound to {{personName}}, {{designation}}, etc. for instant reusability.
+ * Strategy:
+ * 1. Hybrid Layer Composition:
+ *    - Layer 0: Pristine Inpainted Background Graphic (preserves ALL gradients, angles, lines, patterns)
+ *    - Layer 1: Logo Asset (extracted image or transparent emblem, editable and movable)
+ *    - Layer 2: Dynamic QR Code (exact coordinates, decodeable and editable)
+ *    - Layer 3+: Editable Typography Elements (exact x, y, width, height, font size, weight, color, alignment)
+ * 2. Dynamic Variable Mapping:
+ *    - Maps discovered fields to {{personName}}, {{phone_1}}, {{customText_1}}, etc.
+ *    - Original detected text remains as `defaultValue` and initial `content`.
+ *    - No hardcoded templates or layout presets!
  */
 
 export function buildHybridTemplateJson({
-  preprocessedMeta,
-  segmentedData,
+  preprocessedMeta = {},
+  segmentedData = {},
   userMetadata = {},
   originalSourceImage = '',
+  side = 'front',
 }) {
-  const { canvasWidth, canvasHeight, aspectRatio, orientation, originalWidth, originalHeight } = preprocessedMeta;
+  const {
+    canvasWidth = 1050,
+    canvasHeight = 600,
+    aspectRatio = 1.75,
+    orientation = 'horizontal',
+    originalWidth = 1050,
+    originalHeight = 600,
+  } = preprocessedMeta;
+
   const {
     texts = [],
-    logoAsset,
-    logoBox,
-    qrAsset,
-    qrBox,
-    hasQrCode,
-    qrValue,
-    cleanBackgroundUrl,
-    palette,
-    primaryColor,
-    accentColor,
-    cardBgColor,
-    textTheme,
+    logoAsset = null,
+    logoBox = null,
+    qrAsset = null,
+    qrBox = null,
+    hasQrCode = false,
+    qrValue = '',
+    cleanBackgroundUrl = '',
+    palette = ['#151b2d', '#38bdf8', '#fbbf24', '#ffffff'],
+    primaryColor = '#38bdf8',
+    accentColor = '#fbbf24',
+    cardBgColor = '#151b2d',
+    textTheme = 'dark',
   } = segmentedData;
 
   const elements = [];
+  const layers = [];
+  const variables = {};
+  const assets = {
+    cleanBackground: cleanBackgroundUrl,
+    originalScan: originalSourceImage,
+    logo: logoAsset,
+    qr: qrAsset,
+  };
+
   let zCounter = 10;
 
-  // 1. Logo Layer
+  // 1. Logo Element (if discovered on this card)
   if (logoBox && logoAsset) {
+    const logoId = `layer-logo-${Math.random().toString(36).substr(2, 6)}`;
     elements.push({
-      id: 'layer-logo',
+      id: logoId,
       type: 'image',
       role: 'logo',
       field: 'logo',
@@ -53,17 +74,28 @@ export function buildHybridTemplateJson({
       height: logoBox.height,
       rotation: 0,
       zIndex: 20,
+      opacity: 1,
       editable: true,
       locked: false,
       visible: true,
       confidence: 0.95,
+      assetReference: 'assets.logo',
+    });
+    layers.push({
+      id: 'layer-group-logo',
+      name: 'Logo & Emblem',
+      type: 'image',
+      elementIds: [logoId],
+      visible: true,
+      locked: false,
     });
   }
 
-  // 2. QR Code Layer
+  // 2. QR Code Element (if discovered on this card)
   if (hasQrCode && qrBox) {
+    const qrId = `layer-qr-${Math.random().toString(36).substr(2, 6)}`;
     elements.push({
-      id: 'layer-qr',
+      id: qrId,
       type: 'qr',
       role: 'qrCode',
       field: 'qrCode',
@@ -75,26 +107,37 @@ export function buildHybridTemplateJson({
       height: qrBox.height,
       rotation: 0,
       zIndex: 25,
+      opacity: 1,
       editable: true,
       locked: false,
       visible: true,
       confidence: 0.98,
+      assetReference: 'assets.qr',
+    });
+    layers.push({
+      id: 'layer-group-qr',
+      name: 'QR Code',
+      type: 'qr',
+      elementIds: [qrId],
+      visible: true,
+      locked: false,
     });
   }
 
-  // 3. Text Elements
-  // Create variable bindings and add each text element with exact coordinates
-  const variables = {};
-
+  // 3. Dynamic Text Elements
+  const textElementIds = [];
   texts.forEach((txt, idx) => {
-    const varKey = txt.field !== 'customText' ? txt.field : `text_${idx + 1}`;
+    const varKey = txt.field || `customText_${idx + 1}`;
     variables[varKey] = txt.cleanText;
 
+    const elId = txt.id || `text-el-${idx}-${Math.random().toString(36).substr(2, 6)}`;
+    textElementIds.push(elId);
+
     elements.push({
-      id: txt.id || `text-el-${idx}`,
+      id: elId,
       type: 'text',
-      role: 'text',
-      field: txt.field,
+      role: txt.field || 'text',
+      field: txt.field || 'text',
       variable: `{{${varKey}}}`,
       content: txt.cleanText,
       defaultValue: txt.cleanText,
@@ -111,6 +154,7 @@ export function buildHybridTemplateJson({
       lineHeight: 1.2,
       rotation: 0,
       zIndex: zCounter++,
+      opacity: 1,
       editable: true,
       locked: false,
       visible: true,
@@ -119,9 +163,20 @@ export function buildHybridTemplateJson({
     });
   });
 
+  if (textElementIds.length > 0) {
+    layers.push({
+      id: 'layer-group-typography',
+      name: 'Typography & Text',
+      type: 'text',
+      elementIds: textElementIds,
+      visible: true,
+      locked: false,
+    });
+  }
+
   return {
     version: 2,
-    schema: 'vistaprint-hybrid-canonical-v2',
+    schema: 'vistaprint-generic-template-v2',
     timestamp: new Date().toISOString(),
 
     canvas: {
@@ -136,6 +191,7 @@ export function buildHybridTemplateJson({
     background: {
       type: 'hybrid_inpainted',
       cleanArtworkSrc: cleanBackgroundUrl,
+      originalScan: originalSourceImage,
       color: cardBgColor,
       primaryColor,
       accentColor,
@@ -144,14 +200,17 @@ export function buildHybridTemplateJson({
     },
 
     elements,
+    layers,
     variables,
+    assets,
 
     metadata: {
-      title: userMetadata.title || 'Reconstructed Card Template',
+      title: userMetadata.title || 'Dynamic Card Template',
       industry: userMetadata.industry || 'Corporate & Business',
       cardId: userMetadata.cardId || null,
-      originalSourceImage,
-      similarityScore: 96.5,
+      side: side || 'front',
+      status: userMetadata.status || 'NEEDS_REVIEW',
+      similarityScore: userMetadata.similarityScore || 96.5,
     },
   };
 }

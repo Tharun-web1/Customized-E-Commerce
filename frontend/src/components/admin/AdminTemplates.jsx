@@ -13,6 +13,13 @@ export default function AdminTemplates({
   setIsModalOpen,
 }) {
   const [isConvertModalOpen, setIsConvertModalOpen] = useState(false);
+  const [statusFilter, setStatusFilter] = useState('ALL');
+
+  const filteredTemplates = templates.filter((t) => {
+    if (statusFilter === 'ALL') return true;
+    const s = t.text_positions?.status || (t.text_positions?.card_recreation ? 'PUBLISHED' : 'APPROVED');
+    return s === statusFilter;
+  });
 
   const [form, setForm] = useState({
     title: '',
@@ -91,54 +98,114 @@ export default function AdminTemplates({
         </div>
       </div>
 
+      {/* Status Filter Bar */}
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '18px', alignItems: 'center' }}>
+        {['ALL', 'PUBLISHED', 'NEEDS_REVIEW', 'APPROVED'].map((st) => (
+          <button
+            key={st}
+            type="button"
+            onClick={() => setStatusFilter(st)}
+            style={{
+              padding: '5px 12px',
+              border: statusFilter === st ? '1.5px solid #0070ba' : '1px solid #cbd5e1',
+              borderRadius: 6,
+              background: statusFilter === st ? '#f0f9ff' : '#ffffff',
+              color: statusFilter === st ? '#0070ba' : '#475569',
+              fontSize: '0.76rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+            }}
+          >
+            {st.replace('_', ' ')}
+          </button>
+        ))}
+      </div>
+
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))',
         gap: '20px'
       }}>
-        {templates.map((tmpl) => (
-          <div
-            key={tmpl.id}
-            style={{
-              background: '#ffffff',
-              border: '1px solid #e2e8f0',
-              borderRadius: '12px',
-              padding: '16px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              transition: 'transform 0.2s, box-shadow 0.2s',
-            }}
-          >
-            <div>
-              {/* Full Physical Card Design Mockup */}
-              <div style={{ marginBottom: '14px' }}>
-                <TemplateCardMockup template={tmpl} />
-              </div>
+        {filteredTemplates.map((tmpl) => {
+          const tmplStatus = tmpl.text_positions?.status || (tmpl.text_positions?.card_recreation ? 'PUBLISHED' : 'APPROVED');
+          const simScore = tmpl.text_positions?.similarityScore;
 
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span className="admin-badge primary" style={{ textTransform: 'capitalize' }}>
-                  {tmpl.industry}
-                </span>
-                <button
-                  type="button"
-                  className="admin-action-btn delete"
-                  onClick={() => handleDelete(tmpl)}
-                  style={{ padding: '4px 8px' }}
-                  title="Delete Template"
-                >
-                  <Trash2 size={12} />
-                </button>
-              </div>
+          return (
+            <div
+              key={tmpl.id}
+              style={{
+                background: '#ffffff',
+                border: '1px solid #e2e8f0',
+                borderRadius: '12px',
+                padding: '16px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+              }}
+            >
+              <div>
+                {/* Full Physical Card Design Mockup */}
+                <div style={{ marginBottom: '14px' }}>
+                  <TemplateCardMockup template={tmpl} />
+                </div>
 
-              <h4 style={{ margin: '0 0 4px 0', fontSize: '0.96rem', color: '#0f172a', fontWeight: 700 }}>
-                {tmpl.title}
-              </h4>
-              <p style={{ margin: '0 0 10px 0', fontSize: '0.8rem', color: '#64748b' }}>
-                {tmpl.sample_company}
-              </p>
-            </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px', flexWrap: 'wrap', gap: 4 }}>
+                  <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+                    <span className="admin-badge primary" style={{ textTransform: 'capitalize' }}>
+                      {tmpl.industry}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: '0.68rem',
+                        fontWeight: 800,
+                        padding: '2px 6px',
+                        borderRadius: 4,
+                        background: tmplStatus === 'PUBLISHED' ? '#ecfdf5' : tmplStatus === 'APPROVED' ? '#eff6ff' : '#fffbeb',
+                        color: tmplStatus === 'PUBLISHED' ? '#059669' : tmplStatus === 'APPROVED' ? '#2563eb' : '#d97706',
+                        border: `1px solid ${tmplStatus === 'PUBLISHED' ? '#a7f3d0' : tmplStatus === 'APPROVED' ? '#bfdbfe' : '#fde68a'}`,
+                      }}
+                    >
+                      {tmplStatus}
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    {simScore && (
+                      <span
+                        style={{
+                          fontSize: '0.7rem',
+                          fontWeight: 800,
+                          color: '#047857',
+                          background: '#f0fdf4',
+                          border: '1px solid #bbf7d0',
+                          padding: '1px 5px',
+                          borderRadius: 4,
+                        }}
+                      >
+                        {simScore}%
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      className="admin-action-btn delete"
+                      onClick={() => handleDelete(tmpl)}
+                      style={{ padding: '4px 6px' }}
+                      title="Delete Template"
+                    >
+                      <Trash2 size={12} />
+                    </button>
+                  </div>
+                </div>
+
+                <h4 style={{ margin: '0 0 4px 0', fontSize: '0.96rem', color: '#0f172a', fontWeight: 700 }}>
+                  {tmpl.title}
+                </h4>
+                <p style={{ margin: '0 0 10px 0', fontSize: '0.8rem', color: '#64748b' }}>
+                  {tmpl.sample_company || tmpl.sample_name || 'Generic Template'}
+                </p>
+              </div>
 
             <div style={{
               display: 'flex',
@@ -167,8 +234,9 @@ export default function AdminTemplates({
               </span>
             </div>
           </div>
-        ))}
-      </div>
+        );
+      })}
+    </div>
 
       {/* Convert Card to Template Modal Wizard */}
       <ConvertCardToTemplateModal

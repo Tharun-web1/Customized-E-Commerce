@@ -1,0 +1,44 @@
+appId: com.sapprints.app
+---
+# 03. Home Screen Test
+# Verifies Header, Location, Search Bar, Auto-Carousel, Category Grid, and Benefits
+- launchApp:
+    clearState: false
+
+- extendedWaitUntil:
+    visible: "KPHB Colony, Hyderabad"
+    timeout: 5000
+
+# Verify Header & Location
+- assertVisible: "KPHB Colony, Hyderabad"
+- tapOn: "KPHB Colony, Hyderabad"
+- assertVisible: "Select Delivery Location"
+- tapOn: "Hitec City, Hyderabad"
+- assertVisible: "Hitec City, Hyderabad"
+
+# Verify Search Bar input
+- assertVisible: "Search visiting cards, banners, etc..."
+
+# Verify Promotional Banner Carousel
+- assertVisible: "Order Now"
+
+# Verify Shop by Category Grid
+- assertVisible: "Shop by Category"
+- assertVisible: "Visiting Cards"
+- assertVisible: "Banners"
+- assertVisible: "Brochures"
+- assertVisible: "Flyers"
+
+# Scroll vertically to verify remaining categories & benefits
+- scroll
+- assertVisible: "T-Shirt Printing"
+- assertVisible: "Quick Order"
+- assertVisible: "Premium Quality"
+- assertVisible: "24/7 Support"
+
+# Verify 5 Bottom Tabs
+- assertVisible: "Home"
+- assertVisible: "Templates"
+- assertVisible: "Orders"
+- assertVisible: "Offers"
+- assertVisible: "Profile"

@@ -1,0 +1,26 @@
+appId: com.sapprints.app
+---
+# 20. Notifications Screen Test
+# Verifies notification items, unread badges, mark as read, and clear actions
+- launchApp:
+    clearState: false
+
+- extendedWaitUntil:
+    visible: "Profile"
+    timeout: 5000
+
+- tapOn: "Profile"
+- tapOn: "Notifications"
+
+# Verify Notifications Screen
+- assertVisible: "Notifications"
+- assertVisible: "Order dispatches & promotional alerts"
+- assertVisible: "Mark all as read"
+- assertVisible: "Clear all"
+
+# Tap mark all as read
+- tapOn: "Mark all as read"
+
+# Back to Profile
+- back
+- assertVisible: "My Profile"

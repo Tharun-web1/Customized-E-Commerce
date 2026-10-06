@@ -1,0 +1,17 @@
+appId: com.sapprints.app
+---
+# 01. Splash Screen Test
+# Verifies splash loading, branding elements, and automatic transition to Login / Home
+- launchApp:
+    clearState: true
+
+- assertVisible: "SAP PRINTS"
+- assertVisible: "Designing & Printing"
+
+# Wait for splash timeout transition
+- extendedWaitUntil:
+    visible: "Login"
+    timeout: 5000
+
+- assertVisible: "Email or Phone Number"
+- assertVisible: "Password"

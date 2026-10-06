@@ -1,0 +1,22 @@
+appId: com.sapprints.app
+---
+# 18. Customer Profile Screen Test
+# Verifies Profile tab, Avatar, user details, navigation menu options, and WhatsApp specialist link
+- launchApp:
+    clearState: false
+
+- extendedWaitUntil:
+    visible: "Profile"
+    timeout: 5000
+
+- tapOn: "Profile"
+
+# Verify Profile Elements
+- assertVisible: "My Profile"
+- assertVisible: "My Orders"
+- assertVisible: "Edit Profile & Business Info"
+- assertVisible: "Saved Delivery Addresses"
+- assertVisible: "Notifications"
+- assertVisible: "Help & Support (24/7)"
+- assertVisible: "WhatsApp Design Specialist"
+- assertVisible: "Log Out"

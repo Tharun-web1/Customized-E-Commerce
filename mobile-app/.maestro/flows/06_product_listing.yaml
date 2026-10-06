@@ -1,0 +1,22 @@
+appId: com.sapprints.app
+---
+# 06. Product Listing Screen Test
+# Verifies product cards, chips, search filter, and card details
+- launchApp:
+    clearState: false
+
+- extendedWaitUntil:
+    visible: "Shop by Category"
+    timeout: 5000
+
+- tapOn: "Visiting Cards"
+
+# Verify product card details
+- assertVisible: "Standard Visiting Cards"
+- assertVisible: "350 GSM"
+- assertVisible: "Rounded Corner Cards"
+- assertVisible: "Metallic Gold Foil Cards"
+
+# Tap a product card to open details
+- tapOn: "Standard Visiting Cards"
+- assertVisible: "Product Specifications"

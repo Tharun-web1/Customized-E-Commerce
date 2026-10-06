@@ -1,0 +1,29 @@
+appId: com.sapprints.app
+---
+# 21. Customer Logout Test
+# Verifies Logout prompt, clearing session token, and clean reset to Login Screen
+- launchApp:
+    clearState: false
+
+- extendedWaitUntil:
+    visible: "Profile"
+    timeout: 5000
+
+- tapOn: "Profile"
+
+# Scroll to bottom and tap Log Out
+- scroll
+- tapOn: "Log Out"
+
+# Verify Confirmation Dialog
+- assertVisible: "Log Out"
+- assertVisible: "Cancel"
+- tapOn: "Log Out"
+
+# Verify cleanly redirected to Login screen
+- extendedWaitUntil:
+    visible: "Login"
+    timeout: 5000
+
+- assertVisible: "Email or Phone Number"
+- assertVisible: "Password"

@@ -1,0 +1,30 @@
+appId: com.sapprints.app
+---
+# 09. Templates Screen Test
+# Verifies Templates tab, industry chips, search, and selecting a template
+- launchApp:
+    clearState: false
+
+- extendedWaitUntil:
+    visible: "Templates"
+    timeout: 5000
+
+- tapOn: "Templates"
+
+# Verify Template Gallery
+- assertVisible: "Template Gallery"
+- assertVisible: "Corporate & Business"
+- assertVisible: "Real Estate & Luxury"
+
+# Filter by industry
+- tapOn: "Real Estate & Luxury"
+
+# Search within templates
+- tapOn: "Search templates (e.g. Modern, Minimal, Gold)..."
+- inputText: "Gold"
+
+# Select a template
+- tapOn: "Use Template"
+
+# Verify opened in Design Studio
+- assertVisible: "Design Studio"

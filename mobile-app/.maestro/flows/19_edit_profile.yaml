@@ -1,0 +1,41 @@
+appId: com.sapprints.app
+---
+# 19. Edit Profile Screen Test
+# Verifies Personal info inputs, Business name, GSTIN, and Save Profile
+- launchApp:
+    clearState: false
+
+- extendedWaitUntil:
+    visible: "Profile"
+    timeout: 5000
+
+- tapOn: "Profile"
+- tapOn: "Edit Profile & Business Info"
+
+# Verify Edit Profile Screen
+- assertVisible: "Edit Profile"
+- assertVisible: "Personal Information"
+- assertVisible: "Full Name *"
+- assertVisible: "Business & Billing (Optional)"
+- assertVisible: "Default Delivery Address"
+
+# Edit Name
+- tapOn: "Full Name *"
+- inputText: "Vikramaditya Sharma"
+
+# Edit GSTIN
+- scroll
+- tapOn: "GSTIN (for Input Tax Credit)"
+- inputText: "36AAAAA0000A1Z5"
+
+# Save
+- tapOn: "Save Profile Changes"
+
+# Verify update confirmation
+- extendedWaitUntil:
+    visible: "Profile Updated"
+    timeout: 4000
+- tapOn: "OK"
+
+# Verify back in Profile
+- assertVisible: "My Profile"

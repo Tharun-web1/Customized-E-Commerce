@@ -1,0 +1,47 @@
+appId: com.sapprints.app
+---
+# 08. Custom Printing & Design Studio Test
+# Verifies Design Studio, live text inputs, front/back switch, and add to cart
+- launchApp:
+    clearState: false
+
+- extendedWaitUntil:
+    visible: "Shop by Category"
+    timeout: 5000
+
+- tapOn: "Visiting Cards"
+- tapOn: "Standard Visiting Cards"
+
+# Tap Customize
+- tapOn: "Customize"
+
+# Verify Studio is open
+- assertVisible: "Design Studio"
+- assertVisible: "Front Side"
+
+# Edit card text
+- scroll
+- tapOn: "Full Name"
+- inputText: "Rajesh Kumar"
+
+- tapOn: "Designation / Title"
+- inputText: "Managing Director"
+
+- tapOn: "Company / Business Name"
+- inputText: "Kumar Printcraft Solutions"
+
+- tapOn: "Mobile / Phone"
+- inputText: "+91 98765 00112"
+
+# Switch side to Back
+- tapOn: "Back Side"
+- assertVisible: "Back Side"
+
+# Add customized design to Cart
+- tapOn: "Review & Add to Cart"
+
+# Verify navigation to Cart
+- extendedWaitUntil:
+    visible: "Shopping Cart"
+    timeout: 5000
+- assertVisible: "Proceed to Checkout"

@@ -1,0 +1,38 @@
+appId: com.sapprints.app
+---
+# 14. Order Success Screen Test
+# Verifies confirmation checkmark, Order ID, amount, and Continue Shopping / Track Status CTA
+- launchApp:
+    clearState: false
+
+- extendedWaitUntil:
+    visible: "Home"
+    timeout: 5000
+
+- tapOn: "Visiting Cards"
+- tapOn: "Standard Visiting Cards"
+- tapOn: "Customize"
+- tapOn: "Review & Add to Cart"
+
+- extendedWaitUntil:
+    visible: "Proceed to Checkout"
+    timeout: 5000
+- tapOn: "Proceed to Checkout"
+
+- scroll
+- tapOn: "Confirm & Place Order"
+
+# Verify Success Screen
+- extendedWaitUntil:
+    visible: "Order Placed Successfully!"
+    timeout: 6000
+
+- assertVisible: "Order Number:"
+- assertVisible: "Total Paid:"
+- assertVisible: "Production Timetable"
+- assertVisible: "Track Order Status"
+- assertVisible: "Continue Shopping"
+
+# Tap Continue Shopping to return to Home
+- tapOn: "Continue Shopping"
+- assertVisible: "Shop by Category"

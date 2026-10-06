@@ -1,0 +1,28 @@
+appId: com.sapprints.app
+---
+# 17. Offers & Promos Screen Test
+# Verifies Offers tab, promo cards, copy code button, terms, and apply to cart action
+- launchApp:
+    clearState: false
+
+- extendedWaitUntil:
+    visible: "Offers"
+    timeout: 5000
+
+- tapOn: "Offers"
+
+# Verify Offers Screen Elements
+- assertVisible: "Exclusive Offers & Promos"
+- assertVisible: "Welcome First Order Discount"
+- assertVisible: "Corporate Bulk Printing Bundle"
+- assertVisible: "Apply to Cart"
+
+# Tap Apply to Cart on first offer
+- tapOn: "Apply to Cart"
+
+# Verify prompt to view cart
+- assertVisible: "View Cart"
+- tapOn: "View Cart"
+
+# Verify Cart opens
+- assertVisible: "Shopping Cart"

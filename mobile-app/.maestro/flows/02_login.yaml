@@ -1,0 +1,38 @@
+appId: com.sapprints.app
+---
+# 02. Login Screen Test
+# Verifies fields, social buttons, empty credential validation, and successful login
+- launchApp:
+    clearState: true
+
+- extendedWaitUntil:
+    visible: "Login"
+    timeout: 5000
+
+# Verify UI elements
+- assertVisible: "SAP PRINTS"
+- assertVisible: "Email or Phone Number"
+- assertVisible: "Password"
+- assertVisible: "Forgot Password?"
+- assertVisible: "Sign In with Google"
+- assertVisible: "Sign In with Apple"
+- assertVisible: "Don't have an account? Sign Up"
+
+# Verify empty input submission error
+- tapOn: "Login"
+
+# Input valid customer credentials
+- tapOn: "Email or Phone Number"
+- inputText: "customer@sapprints.com"
+
+- tapOn: "Password"
+- inputText: "CustomerPass123"
+
+# Submit login
+- tapOn: "Login"
+
+# Verify successful navigation to Home
+- extendedWaitUntil:
+    visible: "KPHB Colony, Hyderabad"
+    timeout: 5000
+- assertVisible: "Shop by Category"

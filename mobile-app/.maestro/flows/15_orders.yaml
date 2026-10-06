@@ -1,0 +1,29 @@
+appId: com.sapprints.app
+---
+# 15. My Orders Screen Test
+# Verifies Orders tab, Status filter pills, Order cards, and View Details
+- launchApp:
+    clearState: false
+
+- extendedWaitUntil:
+    visible: "Orders"
+    timeout: 5000
+
+- tapOn: "Orders"
+
+# Verify Orders Screen
+- assertVisible: "My Orders"
+- assertVisible: "All"
+- assertVisible: "In Progress"
+- assertVisible: "Delivered"
+
+# Filter by Delivered
+- tapOn: "Delivered"
+
+# Filter by All
+- tapOn: "All"
+
+# Verify order card elements
+- assertVisible: "Order Total"
+- assertVisible: "View Details"
+- assertVisible: "Track"

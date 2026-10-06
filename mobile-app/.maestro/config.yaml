@@ -1,0 +1,4 @@
+# Maestro Configuration for SAP Prints Mobile App
+appId: com.sapprints.app
+---
+# Global flow settings and defaults

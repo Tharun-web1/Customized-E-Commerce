@@ -1,0 +1,26 @@
+appId: com.sapprints.app
+---
+# 16. Order Details & Production Timeline Screen Test
+# Verifies 6-stage production timeline, ordered items, delivery address, and Re-Order action
+- launchApp:
+    clearState: false
+
+- extendedWaitUntil:
+    visible: "Orders"
+    timeout: 5000
+
+- tapOn: "Orders"
+- tapOn: "View Details"
+
+# Verify Order Details Screen
+- assertVisible: "Production & Delivery Timeline"
+- assertVisible: "Order Placed"
+- assertVisible: "Pre-Flight Check"
+- assertVisible: "Delivery Address"
+- assertVisible: "Payment & Price Summary"
+- assertVisible: "Track Live Status"
+- assertVisible: "Re-Order"
+
+# Test Android back navigation
+- back
+- assertVisible: "My Orders"

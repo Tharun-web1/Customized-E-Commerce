@@ -1,0 +1,33 @@
+appId: com.sapprints.app
+---
+# 04. Search Screen Test
+# Verifies Search input, live debouncing, tag filtering, and clear search
+- launchApp:
+    clearState: false
+
+- extendedWaitUntil:
+    visible: "Search visiting cards, banners, etc..."
+    timeout: 5000
+
+- tapOn: "Search visiting cards, banners, etc..."
+
+# Verify Search Screen opened
+- assertVisible: "Search Products"
+- assertVisible: "Popular Searches:"
+- assertVisible: "Gold Foil"
+- assertVisible: "Spot UV"
+
+# Type query
+- tapOn: "Search visiting cards, textures, foil..."
+- inputText: "Gold"
+
+# Verify search results
+- assertVisible: "Metallic Gold Foil Cards"
+
+# Tap popular tag
+- tapOn: "Spot UV"
+- assertVisible: "Raised Spot UV Cards"
+
+# Test Back navigation
+- back
+- assertVisible: "Shop by Category"

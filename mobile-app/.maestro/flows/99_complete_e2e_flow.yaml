@@ -1,0 +1,107 @@
+appId: com.sapprints.app
+---
+# 99. Complete Customer E2E Flow Test
+# Complete Customer Journey:
+# Login -> Home -> Category -> Product -> Product Details -> Customize -> Add to Cart -> Cart -> Address -> Checkout -> Payment -> Order Success -> Orders -> Order Details
+
+# Step 1: Launch App & Login
+- launchApp:
+    clearState: true
+
+- extendedWaitUntil:
+    visible: "Login"
+    timeout: 5000
+
+- tapOn: "Email or Phone Number"
+- inputText: "customer@sapprints.com"
+
+- tapOn: "Password"
+- inputText: "CustomerPass123"
+
+- tapOn: "Login"
+
+# Step 2: Home Storefront
+- extendedWaitUntil:
+    visible: "Shop by Category"
+    timeout: 5000
+
+- assertVisible: "KPHB Colony, Hyderabad"
+- assertVisible: "Visiting Cards"
+- assertVisible: "Order Now"
+
+# Step 3: Browse Category
+- tapOn: "Visiting Cards"
+- assertVisible: "Visiting Cards"
+- assertVisible: "Standard Visiting Cards"
+
+# Step 4: Open Product Details
+- tapOn: "Standard Visiting Cards"
+- assertVisible: "Product Specifications"
+- assertVisible: "Paper Weight"
+- assertVisible: "350 GSM"
+
+# Step 5: Customize in 3D Design Studio
+- tapOn: "Customize"
+- assertVisible: "Design Studio"
+- assertVisible: "Front Side"
+
+# Edit Custom Details
+- scroll
+- tapOn: "Full Name"
+- inputText: "Vikramaditya Sharma"
+
+- tapOn: "Company / Business Name"
+- inputText: "Apex Dynamics Pvt Ltd"
+
+# Step 6: Review & Add to Cart
+- tapOn: "Review & Add to Cart"
+
+# Step 7: Shopping Cart Review & Promo Apply
+- extendedWaitUntil:
+    visible: "Shopping Cart"
+    timeout: 5000
+
+- assertVisible: "Coupons & Offers"
+
+- tapOn: "Enter coupon code (e.g. PROMO15)"
+- inputText: "SAPFIRST"
+
+- tapOn: "Apply"
+
+- scroll
+- assertVisible: "Proceed to Checkout"
+- tapOn: "Proceed to Checkout"
+
+# Step 8: Checkout & Address Selection
+- extendedWaitUntil:
+    visible: "Checkout & Shipping"
+    timeout: 5000
+
+- assertVisible: "1. Contact & Customer Details"
+- assertVisible: "3. Payment Method"
+
+# Step 9: Payment Selection & Place Order
+- scroll
+- tapOn: "Debit / Credit Cards"
+- tapOn: "Confirm & Place Order"
+
+# Step 10: Order Success Screen
+- extendedWaitUntil:
+    visible: "Order Placed Successfully!"
+    timeout: 6000
+
+- assertVisible: "Order Number:"
+- assertVisible: "Track Order Status"
+
+# Step 11: View Order Details & Timeline
+- tapOn: "Track Order Status"
+
+- extendedWaitUntil:
+    visible: "Production & Delivery Timeline"
+    timeout: 5000
+
+- assertVisible: "Order Placed"
+- assertVisible: "Pre-Flight Check"
+- assertVisible: "Delivery Address"
+- assertVisible: "Payment & Price Summary"
+- assertVisible: "Re-Order"

@@ -1,0 +1,37 @@
+appId: com.sapprints.app
+---
+# 12. Checkout & Shipping Screen Test
+# Verifies Customer Contact inputs, Delivery speed selection, Payment methods, and order summary
+- launchApp:
+    clearState: false
+
+- extendedWaitUntil:
+    visible: "Home"
+    timeout: 5000
+
+# Open Product and Proceed to Cart
+- tapOn: "Visiting Cards"
+- tapOn: "Standard Visiting Cards"
+- tapOn: "Customize"
+- tapOn: "Review & Add to Cart"
+
+# Proceed to Checkout
+- extendedWaitUntil:
+    visible: "Proceed to Checkout"
+    timeout: 5000
+- tapOn: "Proceed to Checkout"
+
+# Verify Checkout Screen Elements
+- assertVisible: "Checkout & Shipping"
+- assertVisible: "1. Contact & Customer Details"
+- assertVisible: "2. Priority Dispatch Option"
+- assertVisible: "3. Payment Method"
+
+# Verify Delivery Speeds
+- scroll
+- assertVisible: "Express Priority Air"
+
+# Verify Payment Methods
+- assertVisible: "UPI / QR / Instant NetBanking"
+- assertVisible: "Debit / Credit Cards"
+- assertVisible: "Cash on Delivery / Pay on Dispatch"

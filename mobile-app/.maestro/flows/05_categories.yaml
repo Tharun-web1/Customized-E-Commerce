@@ -1,0 +1,21 @@
+appId: com.sapprints.app
+---
+# 05. Category Navigation & Category Products Test
+# Verifies tapping category cards from Home routes to proper category listings
+- launchApp:
+    clearState: false
+
+- extendedWaitUntil:
+    visible: "Shop by Category"
+    timeout: 5000
+
+# Tap on Visiting Cards category
+- tapOn: "Visiting Cards"
+
+# Verify category products catalog opened
+- assertVisible: "Visiting Cards"
+- assertVisible: "Explore verified styles, papers & custom options"
+
+# Back to Home
+- back
+- assertVisible: "Shop by Category"

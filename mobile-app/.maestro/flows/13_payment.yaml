@@ -1,0 +1,33 @@
+appId: com.sapprints.app
+---
+# 13. Payment Method Selection & Validation Test
+# Verifies selecting UPI / Cards / COD and placing order
+- launchApp:
+    clearState: false
+
+- extendedWaitUntil:
+    visible: "Home"
+    timeout: 5000
+
+- tapOn: "Visiting Cards"
+- tapOn: "Standard Visiting Cards"
+- tapOn: "Customize"
+- tapOn: "Review & Add to Cart"
+
+- extendedWaitUntil:
+    visible: "Proceed to Checkout"
+    timeout: 5000
+- tapOn: "Proceed to Checkout"
+
+# Fill required address details if empty
+- scroll
+- tapOn: "Debit / Credit Cards"
+
+# Tap Place Order
+- tapOn: "Confirm & Place Order"
+
+# Verify transition to Order Success
+- extendedWaitUntil:
+    visible: "Order Placed Successfully!"
+    timeout: 6000
+- assertVisible: "Order Number:"

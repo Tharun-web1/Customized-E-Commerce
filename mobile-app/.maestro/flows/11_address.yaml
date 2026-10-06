@@ -1,0 +1,45 @@
+appId: com.sapprints.app
+---
+# 11. Saved Addresses Screen Test
+# Verifies Address Book list, Add Address form, Edit Address, and Default toggle
+- launchApp:
+    clearState: false
+
+- extendedWaitUntil:
+    visible: "Profile"
+    timeout: 5000
+
+- tapOn: "Profile"
+- tapOn: "Saved Delivery Addresses"
+
+# Verify Saved Addresses Screen
+- assertVisible: "Saved Addresses"
+- assertVisible: "Add New Address"
+
+# Tap Add New Address
+- tapOn: "Add New Address"
+- assertVisible: "Add New Address"
+- assertVisible: "Recipient Full Name *"
+
+# Fill address details
+- tapOn: "Office"
+- tapOn: "Recipient Full Name *"
+- inputText: "Ananya Deshmukh"
+
+- tapOn: "10-Digit Mobile Number *"
+- inputText: "+91 98765 11223"
+
+- tapOn: "Flat / House / Building / Street *"
+- inputText: "Suite 301, Cyber Towers"
+
+- tapOn: "Colony / Area / Locality"
+- inputText: "Hitec City Phase 2"
+
+- scroll
+- tapOn: "Save Address"
+
+# Verify address saved
+- extendedWaitUntil:
+    visible: "Saved Addresses"
+    timeout: 5000
+- assertVisible: "Ananya Deshmukh"

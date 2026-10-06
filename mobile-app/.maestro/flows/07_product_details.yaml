@@ -1,0 +1,30 @@
+appId: com.sapprints.app
+---
+# 07. Product Details Screen Test
+# Verifies product image mockup, variants, quantity selector, specs table, and CTA buttons
+- launchApp:
+    clearState: false
+
+- extendedWaitUntil:
+    visible: "Shop by Category"
+    timeout: 5000
+
+- tapOn: "Visiting Cards"
+- tapOn: "Standard Visiting Cards"
+
+# Verify details
+- assertVisible: "Standard Visiting Cards"
+- assertVisible: "Product Specifications"
+- assertVisible: "Paper Weight"
+- assertVisible: "350 GSM"
+
+# Select different quantity tier (e.g. 200)
+- scroll
+- tapOn: "200"
+
+# Verify total updates
+- assertVisible: "Total (200 Cards)"
+
+# Verify CTA buttons
+- assertVisible: "Templates"
+- assertVisible: "Customize"

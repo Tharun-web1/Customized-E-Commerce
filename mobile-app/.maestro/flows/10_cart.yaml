@@ -1,0 +1,38 @@
+appId: com.sapprints.app
+---
+# 10. Shopping Cart Screen Test
+# Verifies cart item list, quantity adjustment, promo code apply, and checkout button
+- launchApp:
+    clearState: false
+
+- extendedWaitUntil:
+    visible: "Home"
+    timeout: 5000
+
+# Open a product and add to cart
+- tapOn: "Visiting Cards"
+- tapOn: "Standard Visiting Cards"
+- tapOn: "Customize"
+- tapOn: "Review & Add to Cart"
+
+# Verify Cart Screen
+- extendedWaitUntil:
+    visible: "Shopping Cart"
+    timeout: 5000
+
+- assertVisible: "Coupons & Offers"
+
+# Apply promo code
+- tapOn: "Enter coupon code (e.g. PROMO15)"
+- inputText: "SAPFIRST"
+
+- tapOn: "Apply"
+
+# Verify Grand Total & Proceed to Checkout button
+- scroll
+- assertVisible: "Grand Total"
+- assertVisible: "Proceed to Checkout"
+- tapOn: "Proceed to Checkout"
+
+# Verify Checkout screen opens
+- assertVisible: "Checkout & Shipping"

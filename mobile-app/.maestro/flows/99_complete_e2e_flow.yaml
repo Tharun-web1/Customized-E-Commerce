@@ -41,7 +41,7 @@ appId: com.sapprints.app
 - assertVisible: "350 GSM"
 
 # Step 5: Customize in 3D Design Studio
-- tapOn: "Customize"
+- tapOn: "Open 3D Design Studio"
 - assertVisible: "Design Studio"
 - assertVisible: "Front Side"
 

@@ -1,7 +1,8 @@
 appId: com.sapprints.app
 ---
-# 07. Product Details Screen Test
-# Verifies product image mockup, variants, quantity selector, specs table, and CTA buttons
+# 07. Product Details Screen Test (New Rebuilt Architecture)
+# Verifies product hero showcase, ratings, paper stock options, finish coating,
+# customization pathways, quantity tiers, specifications table, Add to Cart & Buy Now CTAs
 - launchApp:
     clearState: false
 
@@ -12,19 +13,44 @@ appId: com.sapprints.app
 - tapOn: "Visiting Cards"
 - tapOn: "Standard Visiting Cards"
 
-# Verify details
+# 1. Verify New Header & Image Showcase
 - assertVisible: "Standard Visiting Cards"
-- assertVisible: "Product Specifications"
-- assertVisible: "Paper Weight"
-- assertVisible: "350 GSM"
+- assertVisible: "2400 DPI Ultra HD Verified • Precision Die-Cut"
 
-# Select different quantity tier (e.g. 200)
+# 2. Verify Product Information & Pricing
+- assertVisible: "In Stock"
+- assertVisible: "Design & Customization"
+
+# 3. Verify Design & Customization Pathways
+- assertVisible: "Choose from 4,000+ Templates"
+- assertVisible: "Open 3D Design Studio"
+- assertVisible: "Upload Custom PDF / Artwork"
+
+# 4. Verify Options & Variants
 - scroll
+- assertVisible: "Paper Stock & Weight"
+- assertVisible: "350 GSM Art Card"
+- assertVisible: "Surface Finish & Coating"
+- assertVisible: "Silk Matte"
+- assertVisible: "Corner Style & Printing Sides"
+
+# 5. Verify Quantity Tiers
+- scroll
+- assertVisible: "Quantity & Bulk Discounts"
+- assertVisible: "Save up to 25%"
 - tapOn: "200"
 
-# Verify total updates
-- assertVisible: "Total (200 Cards)"
+# 6. Verify Delivery & Specifications
+- scroll
+- assertVisible: "Delivery & Turnaround"
+- assertVisible: "Product Specifications"
+- assertVisible: "Bleed & Safety"
 
-# Verify CTA buttons
-- assertVisible: "Templates"
-- assertVisible: "Customize"
+# 7. Verify Fixed Bottom Purchase Bar
+- assertVisible: "Add to Cart"
+- assertVisible: "Buy Now"
+
+# 8. Test Add to Cart Action
+- tapOn: "Add to Cart"
+- assertVisible: "Added to Cart"
+- tapOn: "Continue Shopping"

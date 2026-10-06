@@ -252,26 +252,28 @@ export const ProductDetailScreen = ({ navigation, route }) => {
           <TouchableOpacity
             style={styles.browseDesignsBtn}
             onPress={() =>
-              navigation.navigate('CatalogTab', {
-                screen: 'BrowseTemplates',
-                params: { card, quantity, cornerStyle },
+              navigation.navigate('BrowseTemplates', {
+                card,
+                quantity,
+                cornerStyle,
               })
             }
           >
-            <Ionicons name="grid-outline" size={16} color={colors.primary} />
+            <Ionicons name="grid-outline" size={16} color={colors.primaryNavy} />
             <Text style={styles.browseDesignsText}>Templates</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.openStudioBtn}
             onPress={() =>
-              navigation.navigate('StudioTab', {
-                screen: 'DesignStudio',
-                params: { card, quantity, cornerStyle },
+              navigation.navigate('DesignStudio', {
+                card,
+                quantity,
+                cornerStyle,
               })
             }
           >
-            <Ionicons name="color-wand" size={16} color={colors.textInverted} />
+            <Ionicons name="color-wand" size={16} color={colors.white} />
             <Text style={styles.openStudioBtnText}>Customize</Text>
           </TouchableOpacity>
         </View>

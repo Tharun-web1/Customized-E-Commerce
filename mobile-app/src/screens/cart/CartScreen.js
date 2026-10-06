@@ -86,7 +86,7 @@ export const CartScreen = ({ navigation }) => {
 
             <TouchableOpacity
               style={styles.exploreBtn}
-              onPress={() => navigation.navigate('CatalogTab', { screen: 'CategoryCards' })}
+              onPress={() => navigation.navigate('CategoryCards')}
             >
               <Text style={styles.exploreBtnText}>Explore Visiting Cards</Text>
               <Ionicons name="arrow-forward" size={16} color={colors.textInverted} />
@@ -94,7 +94,7 @@ export const CartScreen = ({ navigation }) => {
 
             <TouchableOpacity
               style={styles.studioBtn}
-              onPress={() => navigation.navigate('StudioTab', { screen: 'DesignStudio' })}
+              onPress={() => navigation.navigate('DesignStudio')}
             >
               <Ionicons name="color-wand-outline" size={16} color={colors.primary} />
               <Text style={styles.studioBtnText}>Open 3D Design Studio</Text>

@@ -16,9 +16,10 @@ import { Header } from '../../components/common/Header';
 import { Button } from '../../components/common/Button';
 import { useCart } from '../../context/CartContext';
 import { useSession } from '../../context/SessionContext';
+import { createOrder } from '../../api/orderApi';
 
 export const CheckoutScreen = ({ navigation, route }) => {
-  const { grandTotal, clearCart } = useCart();
+  const { cart, grandTotal, clearCart } = useCart();
   const { userProfile, saveProfile } = useSession();
 
   // Form State
@@ -26,9 +27,9 @@ export const CheckoutScreen = ({ navigation, route }) => {
   const [phone, setPhone] = useState(userProfile?.phone || '');
   const [email, setEmail] = useState(userProfile?.email || '');
   const [address, setAddress] = useState(userProfile?.address || '');
-  const [city, setCity] = useState(userProfile?.city || '');
-  const [state, setState] = useState(userProfile?.state || '');
-  const [pincode, setPincode] = useState(userProfile?.pincode || '110001');
+  const [city, setCity] = useState(userProfile?.city || 'Hyderabad');
+  const [state, setState] = useState(userProfile?.state || 'Telangana');
+  const [pincode, setPincode] = useState(userProfile?.pincode || '500072');
   const [company, setCompany] = useState(userProfile?.company || '');
   const [gstin, setGstin] = useState(userProfile?.gstin || '');
 
@@ -58,19 +59,39 @@ export const CheckoutScreen = ({ navigation, route }) => {
       gstin,
     });
 
-    // Simulate pre-flight processing
-    setTimeout(() => {
-      setIsSubmitting(false);
-      const orderRef = `ASAP-${Math.floor(100000 + Math.random() * 900000)}`;
-      clearCart();
-      navigation.replace('OrderSuccess', {
-        orderRef,
-        customerName: fullName,
-        totalAmount: grandTotal,
-        paymentMethod,
-        deliverySpeed,
-      });
-    }, 1200);
+    const newOrder = await createOrder({
+      amount: grandTotal,
+      items: cart?.items || [
+        {
+          id: 1,
+          title: 'Standard Visiting Cards',
+          quantity: 100,
+          finish: 'Matte 350 GSM',
+          corner_style: 'Standard (90°)',
+          price: grandTotal,
+        },
+      ],
+      shippingAddress: {
+        fullName,
+        phone,
+        address,
+        city,
+        state,
+        pincode,
+      },
+      paymentStatus: `Paid via ${paymentMethod.toUpperCase()}`,
+      deliverySpeed,
+    });
+
+    setIsSubmitting(false);
+    clearCart();
+    navigation.replace('OrderSuccess', {
+      orderRef: newOrder.id,
+      customerName: fullName,
+      totalAmount: grandTotal,
+      paymentMethod,
+      deliverySpeed,
+    });
   };
 
   return (

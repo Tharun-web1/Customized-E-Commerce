@@ -17,7 +17,8 @@ import { Loader } from '../../components/common/Loader';
 import { fetchCategories, fetchCards } from '../../api/cardApi';
 
 export const CategoryCardsScreen = ({ navigation, route }) => {
-  const initialGroup = route.params?.group || 'all';
+  const initialGroup = route.params?.category || route.params?.group || 'all';
+  const categoryTitle = route.params?.categoryName || route.params?.name || 'Printing Catalog';
   const [categories, setCategories] = useState([]);
   const [cards, setCards] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(initialGroup);
@@ -53,8 +54,9 @@ export const CategoryCardsScreen = ({ navigation, route }) => {
   return (
     <View style={styles.screen}>
       <Header
-        title="Visiting Cards Catalog"
-        subtitle="Explore all styles, papers & finishes"
+        title={categoryTitle}
+        subtitle="Explore verified styles, papers & custom options"
+        showBack
         navigation={navigation}
       />
 

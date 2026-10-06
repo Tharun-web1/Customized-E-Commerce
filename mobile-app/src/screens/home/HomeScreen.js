@@ -45,15 +45,14 @@ export const HomeScreen = ({ navigation }) => {
   };
 
   const handleNotificationPress = () => {
-    Alert.alert(
-      'Notifications (2)',
-      '1. Your Visiting Cards order #SAP-8821 is out for delivery in Hyderabad.\n2. Exclusive 20% OFF on all Flex & Banners this week!'
-    );
+    if (navigation && navigation.navigate) {
+      navigation.navigate('Notifications');
+    }
   };
 
   const handleSearchPress = () => {
     if (navigation && navigation.navigate) {
-      navigation.navigate('BrowseTemplates', { initialQuery: searchQuery });
+      navigation.navigate('Search', { initialQuery: searchQuery });
     }
   };
 

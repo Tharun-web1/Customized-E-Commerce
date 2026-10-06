@@ -22,6 +22,14 @@ import { OrderSuccessScreen } from '../screens/checkout/OrderSuccessScreen';
 import { MyOrdersScreen } from '../screens/orders/MyOrdersScreen';
 import { TrackOrderScreen } from '../screens/orders/TrackOrderScreen';
 
+// Customer Account, Orders & Support Screens
+import { OrderDetailScreen } from '../screens/orders/OrderDetailScreen';
+import { EditProfileScreen } from '../screens/profile/EditProfileScreen';
+import { SavedAddressesScreen } from '../screens/profile/SavedAddressesScreen';
+import { AddEditAddressScreen } from '../screens/profile/AddEditAddressScreen';
+import { NotificationsScreen } from '../screens/notifications/NotificationsScreen';
+import { HelpSupportScreen } from '../screens/support/HelpSupportScreen';
+
 const Stack = createNativeStackNavigator();
 
 export const AppNavigator = () => {
@@ -58,7 +66,15 @@ export const AppNavigator = () => {
         <Stack.Screen name="Checkout" component={CheckoutScreen} />
         <Stack.Screen name="OrderSuccess" component={OrderSuccessScreen} />
         <Stack.Screen name="MyOrders" component={MyOrdersScreen} />
+        <Stack.Screen name="OrderDetail" component={OrderDetailScreen} />
         <Stack.Screen name="TrackOrder" component={TrackOrderScreen} />
+
+        {/* Profile, Addresses, Notifications & Support */}
+        <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+        <Stack.Screen name="SavedAddresses" component={SavedAddressesScreen} />
+        <Stack.Screen name="AddEditAddress" component={AddEditAddressScreen} />
+        <Stack.Screen name="Notifications" component={NotificationsScreen} />
+        <Stack.Screen name="HelpSupport" component={HelpSupportScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

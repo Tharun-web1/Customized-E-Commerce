@@ -146,12 +146,9 @@ export const BrowseTemplatesScreen = ({ navigation, route }) => {
             <TemplateCard
               template={item}
               onSelect={(tpl) =>
-                navigation.navigate('StudioTab', {
-                  screen: 'DesignStudio',
-                  params: {
-                    template: tpl,
-                    card: card || { title: 'Standard Visiting Cards', slug: 'standard' },
-                  },
+                navigation.navigate('DesignStudio', {
+                  template: tpl,
+                  card: card || { title: 'Standard Visiting Cards', slug: 'standard' },
                 })
               }
             />

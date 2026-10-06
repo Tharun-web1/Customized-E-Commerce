@@ -105,7 +105,7 @@ export const OrderSuccessScreen = ({ navigation, route }) => {
             title="Track Order Status"
             variant="primary"
             size="lg"
-            onPress={() => navigation.navigate('TrackOrder', { orderRef })}
+            onPress={() => navigation.navigate('OrderDetail', { orderId: orderRef })}
             icon={<Ionicons name="navigate-outline" size={18} color={colors.textInverted} />}
             style={styles.actionBtn}
           />
@@ -114,7 +114,7 @@ export const OrderSuccessScreen = ({ navigation, route }) => {
             title="Continue Shopping"
             variant="outline"
             size="lg"
-            onPress={() => navigation.navigate('HomeTab')}
+            onPress={() => navigation.reset({ index: 0, routes: [{ name: 'MainTabs' }] })}
             style={styles.actionBtn}
           />
         </View>

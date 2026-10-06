@@ -128,54 +128,92 @@ export const ProfileScreen = ({ navigation }) => {
 
         {/* Customer Menu Navigation Options */}
         <View style={styles.menuCard}>
+          {/* 1. My Orders */}
           <TouchableOpacity
             style={styles.menuItem}
             onPress={() => navigation.navigate('MyOrders')}
           >
-            <View style={[styles.menuIconCircle, { backgroundColor: colors.secondaryLight }]}>
-              <Ionicons name="receipt-outline" size={18} color={colors.primary} />
+            <View style={[styles.menuIconCircle, { backgroundColor: '#FFEBF1' }]}>
+              <Ionicons name="receipt-outline" size={18} color={colors.primaryPink} />
             </View>
             <View style={styles.menuTextWrap}>
               <Text style={styles.menuTitle}>My Orders</Text>
-              <Text style={styles.menuDesc}>View order history, quantities & reorder.</Text>
+              <Text style={styles.menuDesc}>View order history, status & reorder.</Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
           </TouchableOpacity>
 
           <View style={styles.menuDivider} />
 
+          {/* 2. Edit Profile */}
           <TouchableOpacity
             style={styles.menuItem}
-            onPress={() => navigation.navigate('TrackOrder', { orderRef: 'ASAP-982143' })}
+            onPress={() => navigation.navigate('EditProfile')}
           >
-            <View style={[styles.menuIconCircle, { backgroundColor: 'rgba(0, 153, 255, 0.12)' }]}>
-              <Ionicons name="navigate-outline" size={18} color={colors.secondaryDark} />
+            <View style={[styles.menuIconCircle, { backgroundColor: '#EBF5FF' }]}>
+              <Ionicons name="person-outline" size={18} color={colors.primaryBlue} />
             </View>
             <View style={styles.menuTextWrap}>
-              <Text style={styles.menuTitle}>Live Order Tracking</Text>
-              <Text style={styles.menuDesc}>Track real-time print & dispatch stages.</Text>
+              <Text style={styles.menuTitle}>Edit Profile & Business Info</Text>
+              <Text style={styles.menuDesc}>Update name, email, phone & GSTIN.</Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
           </TouchableOpacity>
 
           <View style={styles.menuDivider} />
 
+          {/* 3. Saved Addresses */}
           <TouchableOpacity
             style={styles.menuItem}
-            onPress={() => navigation.navigate('CartTab')}
+            onPress={() => navigation.navigate('SavedAddresses')}
           >
-            <View style={[styles.menuIconCircle, { backgroundColor: 'rgba(245, 158, 11, 0.15)' }]}>
-              <Ionicons name="cart-outline" size={18} color={colors.accentDark} />
+            <View style={[styles.menuIconCircle, { backgroundColor: '#EAF8F1' }]}>
+              <Ionicons name="location-outline" size={18} color="#12A66A" />
             </View>
             <View style={styles.menuTextWrap}>
-              <Text style={styles.menuTitle}>Shopping Cart</Text>
-              <Text style={styles.menuDesc}>Review customized cards & saved previews.</Text>
+              <Text style={styles.menuTitle}>Saved Delivery Addresses</Text>
+              <Text style={styles.menuDesc}>Manage shipping & billing locations.</Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
           </TouchableOpacity>
 
           <View style={styles.menuDivider} />
 
+          {/* 4. Notifications */}
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => navigation.navigate('Notifications')}
+          >
+            <View style={[styles.menuIconCircle, { backgroundColor: '#F3E8FF' }]}>
+              <Ionicons name="notifications-outline" size={18} color="#7C3AED" />
+            </View>
+            <View style={styles.menuTextWrap}>
+              <Text style={styles.menuTitle}>Notifications</Text>
+              <Text style={styles.menuDesc}>Order dispatches & promotional alerts.</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+          </TouchableOpacity>
+
+          <View style={styles.menuDivider} />
+
+          {/* 5. Help & Support */}
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => navigation.navigate('HelpSupport')}
+          >
+            <View style={[styles.menuIconCircle, { backgroundColor: '#FFF0F5' }]}>
+              <Ionicons name="help-circle-outline" size={18} color={colors.primaryPink} />
+            </View>
+            <View style={styles.menuTextWrap}>
+              <Text style={styles.menuTitle}>Help & Support (24/7)</Text>
+              <Text style={styles.menuDesc}>FAQs, contact numbers & Hyderabad hub.</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+          </TouchableOpacity>
+
+          <View style={styles.menuDivider} />
+
+          {/* 6. WhatsApp Specialist */}
           <TouchableOpacity
             style={styles.menuItem}
             onPress={() => Linking.openURL(SUPPORT_WHATSAPP)}
@@ -185,7 +223,7 @@ export const ProfileScreen = ({ navigation }) => {
             </View>
             <View style={styles.menuTextWrap}>
               <Text style={styles.menuTitle}>WhatsApp Design Specialist</Text>
-              <Text style={styles.menuDesc}>Free advice for card bleed inspection & customization.</Text>
+              <Text style={styles.menuDesc}>Instant advice for bleed margins & printing.</Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
           </TouchableOpacity>
@@ -193,7 +231,7 @@ export const ProfileScreen = ({ navigation }) => {
 
         {/* Customer Logout Button */}
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout} activeOpacity={0.85}>
-          <Ionicons name="log-out-outline" size={18} color={colors.danger} />
+          <Ionicons name="log-out-outline" size={18} color="#EF4444" />
           <Text style={styles.logoutButtonText}>Log Out</Text>
         </TouchableOpacity>
       </ScrollView>

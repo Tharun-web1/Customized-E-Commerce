@@ -1,13 +1,13 @@
-# ASAP Visiting Cards - React Native Mobile Application
+# SAP Prints – React Native Mobile Application
 
-This is the standalone React Native mobile application for the Customized E-Commerce platform (ASAP Visiting Cards), built to consume the existing Python Django REST API backend without modifying any existing backend or React.js web code.
+This is the standalone, customer-facing React Native mobile application for **SAP Prints – Designing & Printing**, built to consume the existing Python Django REST API backend without modifying any existing backend or React.js web code.
 
 ---
 
-## Architecture Overview
+## System Architecture
 
 ```text
-                    Existing Python Django Backend
+                     Existing Python Django Backend
                            (Django REST API)
                                   │
                                   │ REST APIs / X-Session-ID
@@ -21,72 +21,54 @@ This is the standalone React Native mobile application for the Customized E-Comm
 
 ---
 
-## Mobile Features
+## Implemented Workflows & Features
 
-1. **Product Catalog & Collections**:
-   - Filter by Shape, Texture, Special (Gold Foil, Spot UV), and Card Holders.
-   - Live search by keywords.
-   - Comprehensive product detail pages with GSM, finish, and dimension specifications.
-   - Volume discount pricing tiers (up to 25% savings).
-   - Real-time PIN code delivery checker.
+1. **Authentication & Onboarding**:
+   - **Splash Screen**: Auto-verifies customer session and routes to Home or Login.
+   - **Official Login Screen**: Exact 1-to-1 UI match with SAP Prints branding, social auth (Google, Apple), and show/hide password toggle.
+   - **Registration Flow**: Complete customer sign-up with validations.
+   - **Forgot Password**: 2-step OTP verification and password reset.
 
-2. **Mobile Card Design Studio**:
-   - Interactive 3D photorealistic card canvas with Front & Back side flip.
-   - Real-time text customization (Full Name, Job Title, Company, Phone, Email, Office Address, QR code URL).
-   - Executive color palettes and metallic gold foil themes.
-   - Vector badges & contact icon placement (Call, WhatsApp, Email, Globe, Map Pin, Trust Shield).
-   - Paper finish & corner styles selection (Square 90° vs. Rounded 6mm corners).
+2. **Official Home Screen**:
+   - **Top Header**: SAP Prints logo, dynamic Location dropdown (`📍 KPHB Colony, Hyderabad ⌄`), and Notification bell with unread badge (`2`).
+   - **Search & QR Scanner**: Real-time product/template search and physical print proof QR inspection.
+   - **Promotional Carousel**: High-definition visiting cards hero banner with CTA (`"Order Now →"`) and pagination indicators.
+   - **3-Column Category Grid**: All 15 official printing categories with custom pastel cards, product artwork, and circular arrow buttons.
+   - **Quick Benefits Bar**: Quick Order / Fast Delivery in Hyderabad, Premium Quality, and 24/7 Customer Support.
 
-3. **Print-Ready Artwork Upload Flow**:
-   - Camera snap & Gallery image picker integration with `expo-image-picker`.
-   - Bleed & safety zone overlay inspection.
-   - Front and back artwork upload to `/api/upload/`.
+3. **5-Tab Navigation**:
+   - **Home**: Main storefront.
+   - **Templates**: 4,000+ industry design templates filterable by industry and orientation.
+   - **Orders**: Live customer order history and 6-stage status tracking timeline.
+   - **Offers**: Exclusive discounts & promo codes (`SAPFIRST`, `BULK30`).
+   - **Profile**: Customer details, addresses, GSTIN invoicing, and support.
 
-4. **Shopping Cart & Checkout**:
-   - Cart item list with front/back mockup rendering.
-   - Coupon verification (`PROMO15`, `SAVE10`, `FREESHIP`) via `/api/promos/validate/`.
-   - Free shipping threshold detection.
-   - Shipping address and customer profile form.
-   - Delivery speeds: Priority Air Express (24–48h) vs. Standard Surface Delivery.
-   - Payment methods: UPI / QR Code, Credit/Debit Cards, Net Banking, and Cash on Delivery (COD).
+4. **Product Catalog & Customization Studio**:
+   - Product detail specifications (GSM, paper finishes, corner styles, volume discounts).
+   - Real-time Interactive Design Studio with live text editing, color palettes, and front/back card flip.
+   - Camera snap and gallery upload for custom print-ready artwork with bleed inspection.
 
-5. **Order Tracking & Management**:
-   - Order confirmation with `#ASAP-XXXXXX` reference generation.
-   - Live 4-stage timetable tracker (Order Placed → Pre-Flight Bleed Check → Digital Print → Air Express Dispatch).
-   - Customer support shortcuts for WhatsApp and phone.
-
-6. **Admin Portal**:
-   - Superuser/staff login via `/api/admin/login/`.
-   - Real-time metrics overview (total cards, templates, orders, revenue).
-   - Customer orders search and deletion via `/api/admin/orders/`.
+5. **Shopping Cart & Checkout**:
+   - Backend session cart integration (`/api/cart/`).
+   - Real-time promo code validation (`/api/promos/validate/`).
+   - Shipping address management, payment method selection (UPI, Cards, NetBanking, COD), and order confirmation with tracking ID.
 
 ---
 
 ## Running the Application
 
-1. **Install dependencies**:
+1. **Navigate to the mobile app directory**:
    ```bash
    cd mobile-app
-   npm install
    ```
 
-2. **Start the Expo development server**:
+2. **Start the development server**:
    ```bash
    npx expo start
    ```
 
-3. **Running on Target Platforms**:
+3. **Run on target platforms**:
    - **Android**: Press `a` in the terminal (or run `npx expo start --android`).
    - **iOS**: Press `i` in the terminal (or run `npx expo start --ios`).
    - **Web Preview**: Press `w` in the terminal (or run `npx expo start --web`).
    - **Physical Device**: Scan the QR code using the **Expo Go** app on your phone.
-
----
-
-## Configuration
-
-Update `src/constants/config.js` or `.env` to point to your backend API:
-- **Android Emulator**: `http://10.0.2.2:8000/api`
-- **iOS Simulator / Web**: `http://localhost:8000/api`
-- **Physical Phone**: `http://<YOUR_COMPUTER_LOCAL_IP>:8000/api` (e.g. `http://192.168.1.5:8000/api`)
-- **Production Server**: `https://asapnow.in/api`

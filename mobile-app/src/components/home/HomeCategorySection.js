@@ -154,12 +154,13 @@ export const HomeCategorySection = ({ onCategoryPress, onViewAllPress }) => {
             activeOpacity={0.88}
             onPress={() => onCategoryPress && onCategoryPress(cat)}
           >
-            {/* Product Image */}
-            <View style={styles.imageContainer}>
+            {/* Dedicated Edge-to-Edge Product Image Container without white strip */}
+            <View style={styles.categoryImageContainer}>
               <Image
                 source={cat.image}
-                style={styles.productImage}
-                resizeMode="contain"
+                style={styles.categoryImage}
+                resizeMode="cover"
+                fadeDuration={150}
               />
             </View>
 
@@ -227,33 +228,35 @@ const styles = StyleSheet.create({
     width: '31.6%',
     height: 104,
     borderRadius: 14,
-    padding: 6,
+    overflow: 'hidden',
     justifyContent: 'space-between',
+    paddingBottom: 6,
+    paddingHorizontal: 6,
+    paddingTop: 4,
     shadowColor: colors.primaryNavy,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.04,
     shadowRadius: 3,
     elevation: 1,
-    borderWidth: 0.5,
-    borderColor: 'rgba(23, 32, 70, 0.04)',
+    borderWidth: 1,
+    borderColor: 'rgba(225, 230, 237, 0.6)',
   },
-  imageContainer: {
-    flex: 1,
+  categoryImageContainer: {
     width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 2,
+    height: 64,
+    borderRadius: 10,
+    overflow: 'hidden',
+    backgroundColor: 'transparent',
   },
-  productImage: {
+  categoryImage: {
     width: '100%',
     height: '100%',
-    maxHeight: 62,
   },
   bottomRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 2,
+    paddingTop: 3,
     gap: 2,
   },
   categoryName: {

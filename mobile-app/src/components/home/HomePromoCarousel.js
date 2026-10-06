@@ -38,13 +38,16 @@ export const PROMO_BANNERS_DATA = [
     titleLine2: 'Bigger Brands',
     subtitle: 'High-Impact Flex &\nOutdoor Advertising',
     ctaText: 'Order Now',
-    image: require('../../assets/images/home/banner_flex_outdoor.png'),
+    image: require('../../assets/images/home/cat_banners_img.png'),
     bg: '#EBF5FF',
     category: 'banners',
     categoryName: 'Banners',
     accentColor: '#1C7EE0',
     isHeroArtwork: false,
     badgeText: 'FAST 24H DELIVERY',
+    imageWidth: '38%',
+    imageHeight: '84%',
+    imageFit: 'contain',
   },
   {
     id: 3,
@@ -52,13 +55,16 @@ export const PROMO_BANNERS_DATA = [
     titleLine2: '& Apparel',
     subtitle: 'Vibrant Sublimation &\nScreen Printing',
     ctaText: 'Order Now',
-    image: require('../../assets/images/home/banner_tshirts_merch.png'),
+    image: require('../../assets/images/home/cat_tshirt_printing_img.png'),
     bg: '#FFF0F5',
     category: 't-shirts',
     categoryName: 'T-Shirt Printing',
     accentColor: '#EF1C62',
     isHeroArtwork: false,
     badgeText: 'POPULAR APPAREL',
+    imageWidth: '40%',
+    imageHeight: '86%',
+    imageFit: 'contain',
   },
   {
     id: 4,
@@ -66,13 +72,16 @@ export const PROMO_BANNERS_DATA = [
     titleLine2: '& Marketing Kits',
     subtitle: 'Multi-Fold Collateral\non Premium Art Paper',
     ctaText: 'Order Now',
-    image: require('../../assets/images/home/banner_brochures_flyers.png'),
+    image: require('../../assets/images/home/cat_brochures_img.png'),
     bg: '#EAF8F1',
     category: 'brochures',
     categoryName: 'Brochures',
     accentColor: '#12A66A',
     isHeroArtwork: false,
     badgeText: 'BULK DISCOUNT 30%',
+    imageWidth: '38%',
+    imageHeight: '84%',
+    imageFit: 'contain',
   },
 ];
 
@@ -120,6 +129,10 @@ export const HomePromoCarousel = ({ onBannerPress }) => {
   };
 
   const renderBannerItem = ({ item }) => {
+    const imgWidth = item.imageWidth || '38%';
+    const imgHeight = item.imageHeight || '84%';
+    const imgFit = item.imageFit || 'contain';
+
     return (
       <TouchableOpacity
         style={[styles.bannerCard, { backgroundColor: item.bg }]}
@@ -134,8 +147,9 @@ export const HomePromoCarousel = ({ onBannerPress }) => {
             resizeMode="cover"
           />
         ) : (
-          // Rich native banner with typography, badge, CTA and product artwork
-          <View style={styles.bannerContentRow}>
+          // Rich native banner with typography on the left and prominent product image on the right
+          <View style={styles.bannerContainer}>
+            {/* Left Content Column */}
             <View style={styles.textContainer}>
               {item.badgeText ? (
                 <View style={[styles.badgePill, { backgroundColor: item.accentColor }]}>
@@ -147,19 +161,30 @@ export const HomePromoCarousel = ({ onBannerPress }) => {
               <Text style={[styles.titleLine2, { color: item.accentColor }]}>
                 {item.titleLine2}
               </Text>
-              <Text style={styles.subtitle}>{item.subtitle}</Text>
+              <Text style={styles.subtitle} numberOfLines={2}>
+                {item.subtitle}
+              </Text>
 
               <View style={[styles.ctaButton, { backgroundColor: item.accentColor }]}>
                 <Text style={styles.ctaText}>{item.ctaText}</Text>
-                <Ionicons name="arrow-forward" size={14} color={colors.white} style={styles.ctaArrow} />
+                <Ionicons name="arrow-forward" size={13} color={colors.white} style={styles.ctaArrow} />
               </View>
             </View>
 
-            <View style={styles.productArtWrapper}>
+            {/* Right Product Image Container - Visually prominent (38-40% width, 84-86% height) */}
+            <View
+              style={[
+                styles.productImageContainer,
+                {
+                  width: imgWidth,
+                  height: imgHeight,
+                },
+              ]}
+            >
               <Image
                 source={item.image}
-                style={styles.productArtImage}
-                resizeMode="contain"
+                style={styles.bannerProductImage}
+                resizeMode={imgFit}
               />
             </View>
           </View>
@@ -238,23 +263,28 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.06,
     shadowRadius: 6,
     elevation: 2,
+    position: 'relative',
   },
   fullBannerImage: {
     width: '100%',
     height: '100%',
   },
-  bannerContentRow: {
+  bannerContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    position: 'relative',
+    height: '100%',
   },
   textContainer: {
-    flex: 1.1,
+    width: '58%',
+    height: '100%',
     justifyContent: 'center',
-    paddingRight: 6,
+    paddingLeft: 16,
+    paddingRight: 4,
+    paddingVertical: 12,
+    zIndex: 2,
   },
   badgePill: {
     alignSelf: 'flex-start',
@@ -270,31 +300,31 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3,
   },
   titleLine1: {
-    fontSize: 16.5,
+    fontSize: 16,
     fontWeight: '800',
     color: colors.primaryNavy,
-    lineHeight: 20,
+    lineHeight: 19.5,
     letterSpacing: -0.3,
   },
   titleLine2: {
-    fontSize: 19,
+    fontSize: 18.5,
     fontWeight: '900',
-    lineHeight: 23,
+    lineHeight: 22,
     letterSpacing: -0.4,
-    marginBottom: 4,
+    marginBottom: 3,
   },
   subtitle: {
-    fontSize: 11,
+    fontSize: 10.5,
     fontWeight: '500',
     color: colors.secondaryText,
-    lineHeight: 14.5,
-    marginBottom: 10,
+    lineHeight: 14,
+    marginBottom: 9,
   },
   ctaButton: {
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'flex-start',
-    paddingHorizontal: 14,
+    paddingHorizontal: 13,
     paddingVertical: 6,
     borderRadius: 16,
     shadowColor: colors.primaryPink,
@@ -305,21 +335,24 @@ const styles = StyleSheet.create({
   },
   ctaText: {
     color: colors.white,
-    fontSize: 12,
+    fontSize: 11.5,
     fontWeight: '800',
   },
   ctaArrow: {
     marginLeft: 4,
   },
-  productArtWrapper: {
-    flex: 0.9,
-    height: '100%',
-    alignItems: 'center',
+  productImageContainer: {
+    position: 'absolute',
+    right: 12,
+    top: '50%',
+    transform: [{ translateY: -70 }], // Centered in 168px card
     justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1,
   },
-  productArtImage: {
+  bannerProductImage: {
     width: '100%',
-    height: 120,
+    height: '100%',
   },
   paginationContainer: {
     flexDirection: 'row',

@@ -140,18 +140,14 @@ export default function ConvertCardToTemplateModal({
           setTitle(formatted);
         }
 
-        // Step 2: Extract layout geometry, text bounding boxes & contact rows
-        setOcrStatusText(`Extracting layout geometry, text bounding boxes & contact rows...`);
-        const ocrResult = await extractCardDetailsFromImage(preprocessedDataUrl, (st) => setOcrStatusText(st));
-
-        // Step 3: Plain Card Template Synthesis (detect graphics, icons, exact positions & use generic placeholders)
-        setOcrStatusText(`Synthesizing plain card template with exact positions, graphics & icons...`);
+        // Step 2: Full Card Synthesis (Preserves real background artwork, curves & exact positions, uses generic placeholders)
+        setOcrStatusText(`Extracting layout geometry, artwork graphics & text positions...`);
         const result = await generatePlainCardTemplate({
           imageDataUrl: preprocessedDataUrl,
-          ocrResult,
-          userTitle: title || 'Plain Card Template',
+          userTitle: title || 'Visiting Card Template',
           industry,
           side,
+          onProgress: (st) => setOcrStatusText(st),
         });
 
         if (result && result.plainTemplateJson) {

@@ -6,13 +6,13 @@ const CART_CACHE_KEY = '@asap_cart_cache';
 export const getCart = async () => {
   const sid = await getStoredSessionId();
   try {
-    const data = await apiRequest(`/cart/?session_id=${sid}`);
+    const data = await apiRequest(`/cart/?session_id=${sid}`, { timeout: 4000 });
     if (data && Array.isArray(data.items)) {
       await AsyncStorage.setItem(CART_CACHE_KEY, JSON.stringify(data));
       return data;
     }
   } catch (err) {
-    console.warn('Backend getCart failed, using local offline cache:', err);
+    // Graceful fallback to client cache when backend is offline
   }
 
   // Fallback to local cache
@@ -34,10 +34,11 @@ export const addToCart = async (payload) => {
     const data = await apiRequest(`/cart/?session_id=${sid}`, {
       method: 'POST',
       body: JSON.stringify({ ...payload, session_id: sid }),
+      timeout: 5000,
     });
     serverItem = data;
   } catch (err) {
-    console.warn('Backend addToCart failed, caching locally:', err);
+    // Gracefully handle offline caching
   }
 
   const finalItem = serverItem || {
@@ -62,7 +63,6 @@ export const addToCart = async (payload) => {
     created_at: new Date().toISOString(),
   };
 
-  // Sync to local cache
   try {
     let currentCache = { items: [], count: 0, subtotal: 0 };
     const raw = await AsyncStorage.getItem(CART_CACHE_KEY);
@@ -70,15 +70,15 @@ export const addToCart = async (payload) => {
       const parsed = JSON.parse(raw);
       if (parsed && Array.isArray(parsed.items)) currentCache = parsed;
     }
-    const exists = currentCache.items.some(it => it.id === finalItem.id);
+    const exists = currentCache.items.some((it) => it.id === finalItem.id);
     if (!exists) {
       currentCache.items = [finalItem, ...currentCache.items];
     }
     currentCache.count = currentCache.items.length;
     currentCache.subtotal = currentCache.items.reduce((sum, it) => sum + Number(it.total_price || 0), 0);
     await AsyncStorage.setItem(CART_CACHE_KEY, JSON.stringify(currentCache));
-  } catch (e) {
-    console.warn('Local cart cache sync error:', e);
+  } catch (cacheErr) {
+    console.warn('Cart cache sync error:', cacheErr);
   }
 
   return finalItem;
@@ -89,17 +89,15 @@ export const removeCartItem = async (itemId) => {
   try {
     await apiRequest(`/cart/${itemId}/?session_id=${sid}`, {
       method: 'DELETE',
+      timeout: 4000,
     });
-  } catch (err) {
-    console.warn('Backend delete cart item error:', err);
-  }
+  } catch (_) {}
 
-  // Update local cache
   try {
     const raw = await AsyncStorage.getItem(CART_CACHE_KEY);
     if (raw) {
       const cache = JSON.parse(raw);
-      cache.items = (cache.items || []).filter(it => it.id !== itemId);
+      cache.items = (cache.items || []).filter((it) => it.id !== itemId);
       cache.count = cache.items.length;
       cache.subtotal = cache.items.reduce((sum, it) => sum + Number(it.total_price || 0), 0);
       await AsyncStorage.setItem(CART_CACHE_KEY, JSON.stringify(cache));
@@ -109,41 +107,25 @@ export const removeCartItem = async (itemId) => {
   return true;
 };
 
-export const validatePromoCode = async (code, orderTotal) => {
+export const validatePromo = async (code, orderTotal) => {
   try {
-    return await apiRequest('/promos/validate/', {
+    const data = await apiRequest('/promos/validate/', {
       method: 'POST',
-      body: JSON.stringify({ code: code.toUpperCase().trim(), order_total: orderTotal }),
+      body: JSON.stringify({ code, order_total: orderTotal }),
+      timeout: 5000,
     });
+    return data;
   } catch (err) {
-    const upper = (code || '').toUpperCase().trim();
-    if (upper === 'PROMO15' || upper === 'NEW15') {
-      const discount = (orderTotal * 15) / 100;
-      return {
-        valid: true,
-        code: upper,
-        discount_percent: 15,
-        discount_amount: roundVal(discount),
-        final_total: roundVal(orderTotal - discount),
-        message: `Coupon ${upper} applied! 15% OFF`,
-      };
+    // Client validation fallback
+    const upper = (code || '').trim().toUpperCase();
+    if (upper === 'SAPFIRST' || upper === 'PROMO15') {
+      const discount = Math.round(orderTotal * 0.15);
+      return { valid: true, discount, message: '15% Welcome discount applied!' };
     }
-    if (upper === 'SAVE10') {
-      const discount = (orderTotal * 10) / 100;
-      return {
-        valid: true,
-        code: upper,
-        discount_percent: 10,
-        discount_amount: roundVal(discount),
-        final_total: roundVal(orderTotal - discount),
-        message: `Coupon ${upper} applied! 10% OFF`,
-      };
+    if (upper === 'BULK30') {
+      const discount = Math.round(orderTotal * 0.30);
+      return { valid: true, discount, message: '30% Bulk printing discount applied!' };
     }
-    return {
-      valid: false,
-      message: 'Invalid coupon code. Try PROMO15 or SAVE10.',
-    };
+    return { valid: false, message: 'Invalid or expired promotional code.' };
   }
 };
-
-const roundVal = (v) => Math.round(v * 100) / 100;

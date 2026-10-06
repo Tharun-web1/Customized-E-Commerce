@@ -1,0 +1,150 @@
+/* src/components/home/SapPromoBanners.css */
+.sap-promo-banners-section {
+  max-width: 1540px;
+  width: 95%;
+  margin: 0 auto 36px;
+}
+
+.sap-promo-banners-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.sap-promo-card {
+  border-radius: 20px;
+  padding: 28px 32px;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.sap-promo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.1);
+}
+
+/* 3D Printing Card */
+.sap-promo-card.card-3d {
+  background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 50%, #fef9c3 100%);
+  border-color: #fde68a;
+}
+
+.sap-promo-card.card-3d .sap-promo-title {
+  color: #92400e;
+}
+
+.sap-promo-card.card-3d .sap-promo-btn {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
+}
+
+.sap-promo-card.card-3d .sap-promo-btn:hover {
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+}
+
+/* Custom Printing Card */
+.sap-promo-card.card-custom {
+  background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 50%, #eff6ff 100%);
+  border-color: #bae6fd;
+}
+
+.sap-promo-card.card-custom .sap-promo-title {
+  color: #1e40af;
+}
+
+.sap-promo-card.card-custom .sap-promo-btn {
+  background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+}
+
+.sap-promo-card.card-custom .sap-promo-btn:hover {
+  background: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
+}
+
+/* Content Elements */
+.sap-promo-content {
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+}
+
+.sap-promo-title {
+  font-size: clamp(24px, 2.2vw, 32px);
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  margin: 0 0 10px 0;
+}
+
+.sap-promo-desc {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #334155;
+  font-weight: 600;
+  margin-bottom: 22px;
+}
+
+.sap-promo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  padding: 10px 22px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sap-promo-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Visual Wrapper */
+.sap-promo-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height: 160px;
+}
+
+.sap-promo-img {
+  max-width: 100%;
+  max-height: 155px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.1));
+}
+
+.sap-promo-card:hover .sap-promo-img {
+  transform: scale(1.05);
+}
+
+@media (max-width: 880px) {
+  .sap-promo-banners-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .sap-promo-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 24px 20px;
+    gap: 16px;
+  }
+  .sap-promo-btn {
+    align-self: center;
+  }
+}

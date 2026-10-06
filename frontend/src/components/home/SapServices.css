@@ -1,0 +1,162 @@
+/* src/components/home/SapServices.css */
+.sap-services-section {
+  max-width: 1540px;
+  width: 95%;
+  margin: 0 auto 36px;
+}
+
+.sap-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.sap-section-title {
+  font-size: clamp(24px, 2.5vw, 32px);
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+
+.sap-section-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #0284c7;
+  font-size: 14.5px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px 8px;
+}
+
+.sap-section-link:hover {
+  color: #0369a1;
+  transform: translateX(3px);
+}
+
+/* 16 Services Grid */
+.sap-services-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 14px;
+}
+
+/* Individual Service Card */
+.sap-service-card {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+}
+
+.sap-service-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.09);
+  border-color: #e2e8f0;
+}
+
+/* Image Container */
+.sap-service-img-wrapper {
+  background: #f8fafc;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.sap-service-img {
+  max-width: 90%;
+  max-height: 85px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.sap-service-card:hover .sap-service-img {
+  transform: scale(1.06);
+}
+
+.sap-service-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: #e11d48;
+  color: #ffffff;
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+}
+
+/* Bottom Label */
+.sap-service-footer {
+  padding: 10px 10px 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border-top: 1px solid #f8fafc;
+  gap: 4px;
+}
+
+.sap-service-name {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sap-service-arrow {
+  color: #64748b;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.sap-service-card:hover .sap-service-arrow {
+  color: #e11d48;
+  transform: translateX(3px);
+}
+
+/* Responsive Grid */
+@media (max-width: 1360px) {
+  .sap-services-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .sap-service-img-wrapper {
+    height: 110px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sap-services-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .sap-service-name {
+    font-size: 13px;
+  }
+}

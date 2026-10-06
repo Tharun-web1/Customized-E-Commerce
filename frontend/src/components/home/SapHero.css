@@ -1,0 +1,306 @@
+/* src/components/home/SapHero.css */
+.sap-hero-section {
+  max-width: 1540px;
+  width: 95%;
+  margin: 18px auto 36px;
+  position: relative;
+}
+
+.sap-hero-banner {
+  position: relative;
+  border-radius: 28px;
+  background: radial-gradient(circle at 10% 20%, #e0f2fe 0%, #fdf2f8 35%, #fffbeb 75%, #ffffff 100%);
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.07);
+  overflow: hidden;
+  min-height: 480px;
+  display: flex;
+  align-items: center;
+}
+
+/* Ambient gradient background aura blobs */
+.sap-hero-banner::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  left: -40px;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+  pointer-events: none;
+}
+
+.sap-hero-banner::after {
+  content: '';
+  position: absolute;
+  bottom: -60px;
+  right: -40px;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(244, 114, 182, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+  pointer-events: none;
+}
+
+.sap-hero-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 1.15fr;
+  align-items: center;
+  width: 100%;
+  padding: 40px 50px;
+  gap: 30px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Left Hero Content */
+.sap-hero-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 20px;
+}
+
+.sap-hero-heading {
+  font-family: inherit;
+  font-size: clamp(38px, 4.4vw, 64px);
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -1.5px;
+  color: #0f172a;
+  margin: 0 0 14px 0;
+}
+
+.sap-hero-heading-line1 {
+  display: block;
+  color: #0f2b5c;
+}
+
+.sap-hero-heading-line2 {
+  display: block;
+  margin-top: 2px;
+}
+
+.sap-hero-gradient-our {
+  color: #f97316; /* Vibrant Orange */
+}
+
+.sap-hero-gradient-prints {
+  background: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  margin-left: 6px;
+}
+
+.sap-hero-subheading {
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 28px 0;
+  letter-spacing: -0.3px;
+}
+
+/* Feature 4-Item Badges Row */
+.sap-hero-badges-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 34px;
+  flex-wrap: wrap;
+}
+
+.sap-hero-badge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.sap-hero-badge-icon-circle {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.sap-hero-badge-item:hover .sap-hero-badge-icon-circle {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.sap-hero-badge-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* CTA Button */
+.sap-hero-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  background: linear-gradient(135deg, #e11d48 0%, #db2777 100%);
+  color: #ffffff;
+  padding: 13px 28px;
+  border-radius: 9999px;
+  font-size: 15.5px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba(225, 29, 72, 0.35);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  cursor: pointer;
+}
+
+.sap-hero-cta-btn:hover {
+  background: linear-gradient(135deg, #be123c 0%, #be185d 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(225, 29, 72, 0.45);
+}
+
+/* Right Hero Composition Showcase */
+.sap-hero-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.sap-hero-mockup-wrapper {
+  width: 100%;
+  max-width: 680px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sap-hero-products-img {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: contain;
+  filter: drop-shadow(0 14px 28px rgba(15, 23, 42, 0.12));
+  transition: transform 0.4s ease;
+}
+
+.sap-hero-products-img:hover {
+  transform: scale(1.02);
+}
+
+/* Circular Carousel Arrow Buttons */
+.sap-hero-nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(30, 41, 59, 0.75);
+  backdrop-filter: blur(4px);
+  border: none;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.sap-hero-nav-arrow:hover {
+  background: rgba(15, 23, 42, 0.95);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.sap-hero-nav-arrow.left {
+  left: 14px;
+}
+
+.sap-hero-nav-arrow.right {
+  right: 14px;
+}
+
+/* Pagination Dots */
+.sap-hero-dots {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.sap-hero-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.25s ease;
+}
+
+.sap-hero-dot.active {
+  background: #e11d48;
+  width: 22px;
+  border-radius: 9999px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .sap-hero-grid {
+    grid-template-columns: 1fr;
+    padding: 36px 30px;
+    text-align: center;
+  }
+  .sap-hero-left {
+    padding-left: 0;
+    align-items: center;
+  }
+  .sap-hero-cta-btn {
+    align-self: center;
+  }
+  .sap-hero-badges-row {
+    justify-content: center;
+  }
+  .sap-hero-mockup-wrapper {
+    max-width: 500px;
+  }
+}
+
+@media (max-width: 640px) {
+  .sap-hero-banner {
+    border-radius: 20px;
+  }
+  .sap-hero-grid {
+    padding: 28px 16px;
+    gap: 20px;
+  }
+  .sap-hero-badges-row {
+    gap: 12px;
+  }
+  .sap-hero-badge-icon-circle {
+    width: 38px;
+    height: 38px;
+  }
+  .sap-hero-badge-label {
+    font-size: 11.5px;
+  }
+  .sap-hero-nav-arrow {
+    width: 34px;
+    height: 34px;
+  }
+}

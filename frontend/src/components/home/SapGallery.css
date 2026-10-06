@@ -1,0 +1,153 @@
+/* src/components/home/SapGallery.css */
+.sap-gallery-section {
+  max-width: 1540px;
+  width: 95%;
+  margin: 0 auto 36px;
+}
+
+.sap-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: thin;
+}
+
+.sap-gallery-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+  position: relative;
+  overflow: hidden;
+  min-width: 90px;
+}
+
+.sap-gallery-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.1);
+  border-color: #cbd5e1;
+}
+
+.sap-gallery-img {
+  max-width: 95%;
+  max-height: 90%;
+  object-fit: contain;
+  transition: transform 0.25s ease;
+}
+
+.sap-gallery-item:hover .sap-gallery-img {
+  transform: scale(1.08);
+}
+
+/* Lightbox Modal */
+.sap-lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(6px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.sap-lightbox-content {
+  background: #ffffff;
+  border-radius: 20px;
+  max-width: 650px;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: sapScaleUp 0.25s ease;
+}
+
+@keyframes sapScaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.sap-lightbox-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.6);
+  color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.2s;
+}
+
+.sap-lightbox-close:hover {
+  background: rgba(15, 23, 42, 0.9);
+}
+
+.sap-lightbox-img-area {
+  background: #f1f5f9;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.sap-lightbox-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.sap-lightbox-details {
+  padding: 20px 24px;
+}
+
+.sap-lightbox-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+}
+
+.sap-lightbox-category {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #e11d48;
+}
+
+@media (max-width: 1200px) {
+  .sap-gallery-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .sap-gallery-item {
+    height: 95px;
+  }
+}
+
+@media (max-width: 600px) {
+  .sap-gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

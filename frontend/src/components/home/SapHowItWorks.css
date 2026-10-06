@@ -1,0 +1,155 @@
+/* src/components/home/SapHowItWorks.css */
+.sap-dual-strip-section {
+  max-width: 1540px;
+  width: 95%;
+  margin: 0 auto 36px;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+}
+
+/* How It Works Box */
+.sap-how-box {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #f1f5f9;
+  padding: 24px 28px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
+}
+
+.sap-how-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 20px 0;
+  letter-spacing: -0.3px;
+}
+
+.sap-how-steps {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  position: relative;
+}
+
+.sap-how-step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 1;
+}
+
+.sap-how-step-num {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  flex-shrink: 0;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+}
+
+.sap-how-step-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.sap-how-step-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.25;
+}
+
+.sap-how-step-desc {
+  font-size: 11px;
+  color: #64748b;
+  line-height: 1.35;
+  margin-top: 3px;
+}
+
+/* We Serve Box */
+.sap-weserve-box {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #f1f5f9;
+  padding: 24px 28px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
+}
+
+.sap-weserve-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 20px 0;
+  letter-spacing: -0.3px;
+}
+
+.sap-weserve-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+
+.sap-weserve-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  padding: 8px 4px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.sap-weserve-item:hover {
+  background: #f8fafc;
+  transform: translateY(-2px);
+}
+
+.sap-weserve-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0284c7;
+  transition: all 0.2s ease;
+}
+
+.sap-weserve-item:hover .sap-weserve-icon {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+.sap-weserve-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #334155;
+  line-height: 1.2;
+}
+
+@media (max-width: 1120px) {
+  .sap-dual-strip-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .sap-how-steps {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .sap-weserve-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+}

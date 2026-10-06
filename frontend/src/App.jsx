@@ -11,6 +11,9 @@ import IndustryTemplates from './components/IndustryTemplates';
 import ReviewsSection from './components/ReviewsSection';
 import CartDrawer from './components/CartDrawer';
 import Footer from './components/Footer';
+import SapNavbar from './components/home/SapNavbar';
+import SapFooter from './components/home/SapFooter';
+import SapHomePage from './pages/SapHomePage';
 import VisitingCardsPage from './components/VisitingCardsPage';
 import AdminDashboard from './components/admin/AdminDashboard';
 import ProductDetailPage from './components/ProductDetailPage';
@@ -381,37 +384,20 @@ export default function App() {
 
   return (
     <div className="app-container">
-      {/* 1. Topbar */}
-      <Topbar onOpenAdmin={navigateToAdmin} />
-
-      {/* 2. Header with Search, Cart & Logo Home Click */}
-      <Header
-        cards={cards}
-        onSelectCard={handleSelectCard}
-        onOpenCart={navigateToCart}
+      {/* @SAP PRINTS Header & Navigation */}
+      <SapNavbar
         cartCount={cartData?.count || 0}
+        onOpenCart={navigateToCart}
         onNavigateHome={navigateToHome}
-      />
-
-      {/* 3. Navbar with Mega Dropdowns & Active State */}
-      <Navbar
-        activePage={currentPage}
-        onSelectCardSlug={(slug) => {
-          handleSelectCardSlug(slug);
-        }}
-        onSelectTab={(tab) => {
-          if (tab === 'cards') {
+        onNavigateAdmin={navigateToAdmin}
+        onSelectService={(service) => {
+          if (service.slug === 'visiting-cards') {
             navigateToVisitingCards();
-          } else if (tab === 'customizer') {
-            const defaultCard = selectedCard || cards[0] || getFallbackCard('standard');
-            navigateToStudio(defaultCard, templates[0]);
-          } else if (tab === 'templates') {
-            const defaultCard = selectedCard || cards[0] || getFallbackCard('standard');
-            navigateToTemplates(defaultCard);
           } else {
-            navigateToHome();
+            navigateToVisitingCards();
           }
         }}
+        cards={cards}
       />
 
       {/* 4. Main Content Area Switcher */}
@@ -492,37 +478,48 @@ export default function App() {
           }}
         />
       ) : (
-        /* Default Landing / Home Page */
-        <>
-          <HeroSection
-            onStartDesigning={navigateToVisitingCards}
-            onBrowseTemplates={() => {
-              const standardCard = cards.find(c => c.slug === 'standard') || cards[0] || getFallbackCard('standard');
-              navigateToTemplates(standardCard);
-            }}
-          />
-
-          <TrustStrip />
-
-          <CategoryGrid
-            cards={cards}
-            onSelectCard={handleSelectCard}
-          />
-
-          <IndustryTemplates
-            templates={templates}
-            onSelectTemplate={(template) => {
-              const targetCard = cards.find((c) => c.id === template.card || c.slug === 'standard') || cards[0] || getFallbackCard('standard');
-              navigateToStudio(targetCard, template);
-            }}
-          />
-
-          <ReviewsSection />
-        </>
+        /* @SAP PRINTS Homepage Matching Exact Design Mockups */
+        <SapHomePage
+          cards={cards}
+          onSelectService={(svc) => {
+            if (svc.slug === 'visiting-cards') {
+              navigateToVisitingCards();
+            } else if (svc.slug === '3d-printing') {
+              const el = document.getElementById('3d-printing-section');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            } else if (svc.slug === 'custom-printing') {
+              const el = document.getElementById('custom-printing-section');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            } else {
+              navigateToVisitingCards();
+            }
+          }}
+          onViewAllServices={navigateToVisitingCards}
+          onExploreServices={() => {
+            const el = document.getElementById('services-section');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }}
+          onExploreOffers={() => {
+            const el = document.getElementById('special-offers-section');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }}
+          onExplore3d={() => {
+            const el = document.getElementById('3d-printing-section');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }}
+          onExploreCustom={() => {
+            const el = document.getElementById('custom-printing-section');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }}
+          onViewGallery={() => {
+            const el = document.getElementById('gallery-section');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }}
+        />
       )}
 
-      {/* Corporate Footer */}
-      <Footer />
+      {/* @SAP PRINTS Footer */}
+      <SapFooter onNavigateHome={navigateToHome} />
 
       {/* Cart Drawer */}
       <CartDrawer

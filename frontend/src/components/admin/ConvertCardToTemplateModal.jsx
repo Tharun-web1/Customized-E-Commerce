@@ -2,30 +2,24 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   Sparkles,
   UploadCloud,
-  ArrowRight,
-  ArrowLeft,
   CheckCircle2,
   X,
-  Layers,
-  Image as ImageIcon,
-  Check,
   RefreshCw,
   Edit3,
-  Sliders,
-  Code,
+  Layers,
   Tag,
+  ExternalLink,
   Plus,
   Trash2,
-  AlertTriangle,
-  RotateCw,
+  Sliders,
+  Check,
 } from 'lucide-react';
 import { createTemplate } from '../../api';
 import { preprocessCardImage } from '../../utils/cardPreprocessingEngine';
-import { segmentCardElements } from '../../utils/cardSegmentationEngine';
-import { buildHybridTemplateJson } from '../../utils/templateBuilderService';
-import { runAutoRefinementLoop, computeVisualComparison } from '../../utils/visualComparisonService';
-import InteractiveTemplateCanvas from './InteractiveTemplateCanvas';
-import OriginalVsGeneratedOverlay from './OriginalVsGeneratedOverlay';
+import { extractCardDetailsFromImage } from '../../utils/cardOcrParser';
+import { generatePlainCardTemplate, TEMPLATE_PLACEHOLDERS } from '../../utils/plainCardTemplateEngine';
+import PlainCardPreview from './PlainCardPreview';
+import VistaprintDesignStudio from '../design-studio/VistaprintDesignStudio';
 
 const INDUSTRY_OPTIONS = [
   'Corporate & Business',
@@ -44,14 +38,14 @@ const INDUSTRY_OPTIONS = [
 ];
 
 const FIELD_ROLE_TAGS = [
-  { value: 'personName', label: 'Person Name' },
-  { value: 'designation', label: 'Designation' },
+  { value: 'fullName', label: 'Person Name' },
+  { value: 'jobTitle', label: 'Designation / Title' },
   { value: 'companyName', label: 'Company Name' },
   { value: 'phone', label: 'Phone Number' },
+  { value: 'phone_2', label: 'Secondary Phone' },
   { value: 'email', label: 'Email Address' },
-  { value: 'website', label: 'Website' },
-  { value: 'address', label: 'Address' },
-  { value: 'tagline', label: 'Tagline' },
+  { value: 'web', label: 'Website' },
+  { value: 'address1', label: 'Address' },
   { value: 'customText', label: 'Custom Text' },
 ];
 
@@ -68,33 +62,26 @@ export default function ConvertCardToTemplateModal({
 
   // Front Side State
   const [frontImage, setFrontImage] = useState(null);
-  const [frontCleanBg, setFrontCleanBg] = useState('');
   const [frontTemplateJson, setFrontTemplateJson] = useState(null);
-  const [frontRenderedUrl, setFrontRenderedUrl] = useState('');
-  const [frontDiffImageUrl, setFrontDiffImageUrl] = useState('');
-  const [frontSimilarityScore, setFrontSimilarityScore] = useState(96.5);
   const [frontOrientation, setFrontOrientation] = useState('horizontal');
 
   // Back Side State (Optional)
   const [backImage, setBackImage] = useState(null);
-  const [backCleanBg, setBackCleanBg] = useState('');
   const [backTemplateJson, setBackTemplateJson] = useState(null);
-  const [backRenderedUrl, setBackRenderedUrl] = useState('');
-  const [backDiffImageUrl, setBackDiffImageUrl] = useState('');
-  const [backSimilarityScore, setBackSimilarityScore] = useState(96.5);
   const [backOrientation, setBackOrientation] = useState('horizontal');
 
   // Extraction Progress & Status
   const [isExtractingOcr, setIsExtractingOcr] = useState(false);
   const [ocrStatusText, setOcrStatusText] = useState('');
-  const [ocrExtractedCount, setOcrExtractedCount] = useState(0);
 
   // Template Metadata
   const [title, setTitle] = useState('');
   const [industry, setIndustry] = useState('Corporate & Business');
   const [selectedCardId, setSelectedCardId] = useState(() => (cards && cards[0] ? cards[0].id : null));
-  const [templateStatus, setTemplateStatus] = useState('NEEDS_REVIEW'); // 'NEEDS_REVIEW' | 'APPROVED' | 'PUBLISHED'
-  const [showJsonViewer, setShowJsonViewer] = useState(false);
+
+  // Preview Modes & Studio State
+  const [showBlueprint, setShowBlueprint] = useState(true);
+  const [isStudioOpen, setIsStudioOpen] = useState(false);
 
   const frontFileRef = useRef(null);
   const backFileRef = useRef(null);
@@ -109,13 +96,8 @@ export default function ConvertCardToTemplateModal({
 
   if (!isOpen) return null;
 
-  // Active side references
   const currentImage = activeSide === 'front' ? frontImage : backImage;
   const currentTemplateJson = activeSide === 'front' ? frontTemplateJson : backTemplateJson;
-  const currentRenderedUrl = activeSide === 'front' ? frontRenderedUrl : backRenderedUrl;
-  const currentDiffImageUrl = activeSide === 'front' ? frontDiffImageUrl : backDiffImageUrl;
-  const currentSimilarity = activeSide === 'front' ? frontSimilarityScore : backSimilarityScore;
-  const currentOrientation = activeSide === 'front' ? frontOrientation : backOrientation;
 
   const setCurrentTemplateJson = (updated) => {
     if (activeSide === 'front') {
@@ -125,21 +107,21 @@ export default function ConvertCardToTemplateModal({
     }
   };
 
-  // Main Processing Pipeline: Preprocess -> Segment -> Inpaint -> Hybrid Template -> Visual Verification
+  // Main Processing Pipeline: Preprocess -> OCR -> Plain Card Template Synthesis
   const processCardFile = async (file, side = 'front') => {
     if (!file) return;
     setIsProcessing(true);
     setIsExtractingOcr(true);
-    setOcrStatusText(`Analyzing ${side} side geometry, boundary & perspective...`);
+    setOcrStatusText(`Analyzing ${side} side geometry & perspective...`);
 
     const reader = new FileReader();
     reader.onload = async (e) => {
       const rawDataUrl = e.target.result;
 
       try {
-        // Step 1: Boundary detection, desk removal & dynamic natural aspect ratio
+        // Step 1: Boundary detection, desk removal & orientation
         const preprocessed = await preprocessCardImage(rawDataUrl);
-        const { preprocessedDataUrl, canvasWidth, canvasHeight, aspectRatio, orientation } = preprocessed;
+        const { preprocessedDataUrl, orientation } = preprocessed;
 
         if (side === 'front') {
           setFrontImage(preprocessedDataUrl);
@@ -154,67 +136,39 @@ export default function ConvertCardToTemplateModal({
           const cleanName = file?.name ? file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ') : '';
           const formatted = cleanName
             ? cleanName.split(' ').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
-            : 'Custom Card Template';
+            : 'Plain Card Template';
           setTitle(formatted);
         }
 
-        // Step 2: Full-Canvas Decomposition & Background Inpainting
-        setOcrStatusText(`Decomposing ${side} artwork: Text, Logo, QR & Clean Background...`);
-        const segmented = await segmentCardElements(
-          preprocessedDataUrl,
-          { canvasWidth, canvasHeight },
-          (status) => setOcrStatusText(status)
-        );
+        // Step 2: Extract layout geometry, text bounding boxes & contact rows
+        setOcrStatusText(`Extracting layout geometry, text bounding boxes & contact rows...`);
+        const ocrResult = await extractCardDetailsFromImage(preprocessedDataUrl, (st) => setOcrStatusText(st));
 
-        if (side === 'front') {
-          setFrontCleanBg(segmented.cleanBackgroundUrl);
-          setOcrExtractedCount(segmented.texts?.length || 0);
-        } else {
-          setBackCleanBg(segmented.cleanBackgroundUrl);
-        }
-
-        // Step 3: Build Canonical Hybrid Template JSON
-        const hybridJson = buildHybridTemplateJson({
-          preprocessedMeta: preprocessed,
-          segmentedData: segmented,
-          userMetadata: {
-            title: title || 'Custom Visiting Card Template',
-            industry,
-            cardId: selectedCardId,
-            status: 'NEEDS_REVIEW',
-          },
-          originalSourceImage: rawDataUrl,
+        // Step 3: Plain Card Template Synthesis (detect graphics, icons, exact positions & use generic placeholders)
+        setOcrStatusText(`Synthesizing plain card template with exact positions, graphics & icons...`);
+        const result = await generatePlainCardTemplate({
+          imageDataUrl: preprocessedDataUrl,
+          ocrResult,
+          userTitle: title || 'Plain Card Template',
+          industry,
           side,
         });
 
-        // Step 4: Visual Auto-Refinement Loop & Difference Heatmap Calculation
-        setOcrStatusText(`Running visual similarity & micro-alignment verification...`);
-        const refinement = await runAutoRefinementLoop(
-          preprocessedDataUrl,
-          hybridJson,
-          3,
-          (status) => setOcrStatusText(status)
-        );
-
-        if (side === 'front') {
-          setFrontTemplateJson(refinement.refinedTemplateJson);
-          setFrontRenderedUrl(refinement.renderedDataUrl);
-          setFrontDiffImageUrl(refinement.diffImageUrl);
-          setFrontSimilarityScore(refinement.similarityScore);
-        } else {
-          setBackTemplateJson(refinement.refinedTemplateJson);
-          setBackRenderedUrl(refinement.renderedDataUrl);
-          setBackDiffImageUrl(refinement.diffImageUrl);
-          setBackSimilarityScore(refinement.similarityScore);
-        }
-
-        if (showToast) {
-          showToast(`✨ Generated ${side} template with ${refinement.similarityScore}% visual match!`, 'success');
+        if (result && result.plainTemplateJson) {
+          if (side === 'front') {
+            setFrontTemplateJson(result.plainTemplateJson);
+          } else {
+            setBackTemplateJson(result.plainTemplateJson);
+          }
+          setCurrentStep(2); // Jump directly to Review & Studio Step!
+          if (showToast) {
+            showToast(`✨ Generated ${side} plain card template at exact positions!`, 'success');
+          }
         }
       } catch (err) {
-        console.error('Error during card processing:', err);
+        console.error('Error during plain card processing:', err);
         if (showToast) {
-          showToast(`Processing note: ${err?.message || 'Standard template generated'}`, 'info');
+          showToast(`Processing notice: ${err?.message || 'Standard template generated'}`, 'info');
         }
       } finally {
         setIsProcessing(false);
@@ -236,7 +190,7 @@ export default function ConvertCardToTemplateModal({
   };
 
   // Save template into Django backend
-  const handleSaveTemplate = async () => {
+  const handleQuickPublish = async () => {
     if (!frontImage || !frontTemplateJson) {
       if (showToast) showToast('Please upload and generate a front card template first.', 'error');
       return;
@@ -247,41 +201,25 @@ export default function ConvertCardToTemplateModal({
       const matchedCard = (cards || []).find((c) => String(c.id) === String(selectedCardId)) || (cards && cards[0]);
       const cardIdToSend = matchedCard ? Number(matchedCard.id) : (selectedCardId ? Number(selectedCardId) : null);
 
-      // Extract sample fields dynamically from discovered elements
-      const frontElements = frontTemplateJson?.elements || [];
-      const sampleNameEl = frontElements.find((e) => e.field === 'personName' || e.role === 'personName');
-      const sampleCompanyEl = frontElements.find((e) => e.field === 'companyName' || e.role === 'companyName');
-      const sampleTitleEl = frontElements.find((e) => e.field === 'designation' || e.role === 'designation');
-      const samplePhoneEl = frontElements.find((e) => e.field?.startsWith('phone') || e.role?.startsWith('phone'));
-      const sampleEmailEl = frontElements.find((e) => e.field?.startsWith('email') || e.role?.startsWith('email'));
-      const sampleTaglineEl = frontElements.find((e) => e.field === 'tagline' || e.role === 'tagline');
-
       const payload = {
-        title: (title || '').trim() || (sampleCompanyEl ? `${sampleCompanyEl.content} Template` : 'Visiting Card Template'),
+        title: (title || '').trim() || 'Plain Visiting Card Template',
         industry: industry || 'Corporate & Business',
         orientation: frontOrientation || 'horizontal',
         card: cardIdToSend,
-        primary_color: frontTemplateJson?.background?.primaryColor || '#0070ba',
-        color_palette: (frontTemplateJson?.background?.palette || ['#0070ba', '#1e293b']).join(','),
+        primary_color: frontTemplateJson?.background?.accentColor || frontTemplateJson?.background?.color || '#0070ba',
         preview_style: 'card_recreation',
         layout_type: 'card_recreation',
-        sample_company: sampleCompanyEl ? sampleCompanyEl.content : '',
-        sample_tagline: sampleTaglineEl ? sampleTaglineEl.content : '',
-        sample_name: sampleNameEl ? sampleNameEl.content : '',
-        sample_job_title: sampleTitleEl ? sampleTitleEl.content : '',
-        sample_phone: samplePhoneEl ? samplePhoneEl.content : '',
-        sample_email: sampleEmailEl ? sampleEmailEl.content : '',
-        background_image: frontCleanBg || frontImage,
-        back_background_image: backCleanBg || backImage || '',
+        sample_company: TEMPLATE_PLACEHOLDERS.companyName,
+        sample_tagline: TEMPLATE_PLACEHOLDERS.companyMessage,
+        sample_name: TEMPLATE_PLACEHOLDERS.fullName,
+        sample_job_title: TEMPLATE_PLACEHOLDERS.jobTitle,
+        sample_phone: TEMPLATE_PLACEHOLDERS.phone,
+        sample_email: TEMPLATE_PLACEHOLDERS.email,
         text_positions: {
           card_recreation: true,
-          status: templateStatus,
-          similarityScore: frontSimilarityScore,
-          cleanArtwork: frontCleanBg || frontImage,
-          backCleanArtwork: backCleanBg || backImage || '',
+          status: 'PUBLISHED',
           originalScan: frontImage || '',
           backOriginalScan: backImage || '',
-          renderedPreview: frontRenderedUrl || '',
           templateJson: frontTemplateJson,
           frontTemplateJson,
           backTemplateJson: backTemplateJson || null,
@@ -291,7 +229,7 @@ export default function ConvertCardToTemplateModal({
       await createTemplate(payload);
 
       if (showToast) {
-        showToast(`Template "${payload.title}" saved successfully with status [${templateStatus}]!`, 'success');
+        showToast(`Template "${payload.title}" published successfully!`, 'success');
       }
 
       if (onRefreshData) onRefreshData();
@@ -305,12 +243,100 @@ export default function ConvertCardToTemplateModal({
     }
   };
 
+  // Publish callback from inside Design Studio
+  const handlePublishFromStudio = async (publishedData) => {
+    try {
+      setIsProcessing(true);
+      const matchedCard = (cards || []).find((c) => String(c.id) === String(selectedCardId)) || (cards && cards[0]);
+      const cardIdToSend = matchedCard ? Number(matchedCard.id) : (selectedCardId ? Number(selectedCardId) : null);
+
+      const payload = {
+        title: (title || publishedData.title || 'Plain Card Template').trim(),
+        industry: industry || 'Corporate & Business',
+        orientation: frontOrientation || 'horizontal',
+        card: cardIdToSend,
+        primary_color: publishedData.primary_color || '#0070ba',
+        layout_type: 'card_recreation',
+        preview_style: 'card_recreation',
+        sample_company: publishedData.sample_company || TEMPLATE_PLACEHOLDERS.companyName,
+        sample_tagline: publishedData.sample_tagline || TEMPLATE_PLACEHOLDERS.companyMessage,
+        sample_name: publishedData.sample_name || TEMPLATE_PLACEHOLDERS.fullName,
+        sample_job_title: publishedData.sample_job_title || TEMPLATE_PLACEHOLDERS.jobTitle,
+        sample_phone: publishedData.sample_phone || TEMPLATE_PLACEHOLDERS.phone,
+        sample_email: publishedData.sample_email || TEMPLATE_PLACEHOLDERS.email,
+        text_positions: {
+          card_recreation: true,
+          status: 'PUBLISHED',
+          originalScan: frontImage || '',
+          backOriginalScan: backImage || '',
+          templateJson: publishedData.text_positions?.templateJson || frontTemplateJson,
+          frontTemplateJson: publishedData.text_positions?.templateJson || frontTemplateJson,
+          backTemplateJson: backTemplateJson || null,
+        },
+      };
+
+      await createTemplate(payload);
+      if (showToast) {
+        showToast(`Template "${payload.title}" published successfully!`, 'success');
+      }
+      if (onRefreshData) onRefreshData();
+      setIsStudioOpen(false);
+      onClose();
+    } catch (err) {
+      console.error('Failed to publish template from studio:', err);
+      if (showToast) showToast(err?.message || 'Failed to publish template', 'error');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // FULLSCREEN DESIGN STUDIO OVERLAY MODE
+  if (isStudioOpen) {
+    const matchedCard = (cards || []).find((c) => String(c.id) === String(selectedCardId)) || (cards && cards[0]);
+    const studioTemplate = {
+      id: 'admin_preview_tpl',
+      title: title || 'Plain Card Template',
+      industry: industry || 'Corporate & Business',
+      orientation: frontOrientation || 'horizontal',
+      layout_type: 'card_recreation',
+      preview_style: 'card_recreation',
+      primary_color: frontTemplateJson?.background?.color || '#0070ba',
+      sample_name: TEMPLATE_PLACEHOLDERS.fullName,
+      sample_job_title: TEMPLATE_PLACEHOLDERS.jobTitle,
+      sample_company: TEMPLATE_PLACEHOLDERS.companyName,
+      sample_tagline: TEMPLATE_PLACEHOLDERS.companyMessage,
+      sample_phone: TEMPLATE_PLACEHOLDERS.phone,
+      sample_email: TEMPLATE_PLACEHOLDERS.email,
+      sample_web: TEMPLATE_PLACEHOLDERS.web,
+      text_positions: {
+        card_recreation: true,
+        status: 'PUBLISHED',
+        templateJson: frontTemplateJson,
+      },
+    };
+
+    return (
+      <div style={{ position: 'fixed', inset: 0, zIndex: 999999, background: '#ffffff' }}>
+        <VistaprintDesignStudio
+          key="admin_studio_preview"
+          card={matchedCard}
+          template={studioTemplate}
+          allCards={cards}
+          allTemplates={[]}
+          isAdminReview={true}
+          onClose={() => setIsStudioOpen(false)}
+          onAdminPublishTemplate={handlePublishFromStudio}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="admin-modal-overlay" onClick={onClose}>
       <div
         className="admin-modal"
         style={{
-          maxWidth: 960,
+          maxWidth: 1040,
           width: '95%',
           maxHeight: '94vh',
           display: 'flex',
@@ -351,10 +377,10 @@ export default function ConvertCardToTemplateModal({
             </div>
             <div>
               <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 800, color: '#0f172a' }}>
-                Generic Card Image → Editable Template Engine
+                Visiting Card → Plain Card Template Generator
               </h3>
               <p style={{ margin: '2px 0 0 0', fontSize: '0.78rem', color: '#64748b' }}>
-                Upload ANY visiting card. Automatically reconstructs background, logo, QR & editable fields.
+                Extracts graphics, icons & exact positions onto a clean template. Replaces personal data with generic placeholders.
               </p>
             </div>
           </div>
@@ -411,70 +437,50 @@ export default function ConvertCardToTemplateModal({
             padding: '4px 24px',
             gap: '8px',
             flexShrink: 0,
-            overflowX: 'auto',
           }}
         >
           {[
-            { step: 1, label: 'Upload & Boundary Detection', enabled: true },
-            { step: 2, label: 'Discovered Elements', enabled: Boolean(currentImage && currentTemplateJson) },
-            { step: 3, label: 'Canvas Editor & Corrections', enabled: Boolean(currentImage && currentTemplateJson) },
-            { step: 4, label: 'Visual Verification & Publishing', enabled: Boolean(currentImage && currentTemplateJson) },
+            { step: 1, label: '1. Upload Card Image' },
+            { step: 2, label: '2. Review Plain Template & Open in Studio' },
           ].map((tab) => (
             <button
               key={tab.step}
               type="button"
-              onClick={() => tab.enabled && setCurrentStep(tab.step)}
-              disabled={!tab.enabled}
+              onClick={() => (tab.step === 1 || currentTemplateJson) && setCurrentStep(tab.step)}
+              disabled={tab.step === 2 && !currentTemplateJson}
               style={{
                 background: 'none',
                 border: 'none',
                 padding: '10px 14px',
                 fontSize: '0.82rem',
                 fontWeight: 700,
-                color: currentStep === tab.step ? '#0070ba' : tab.enabled ? '#64748b' : '#cbd5e1',
+                color: currentStep === tab.step ? '#0070ba' : currentTemplateJson ? '#64748b' : '#cbd5e1',
                 borderBottom: currentStep === tab.step ? '2px solid #0070ba' : '2px solid transparent',
-                cursor: tab.enabled ? 'pointer' : 'not-allowed',
+                cursor: (tab.step === 1 || currentTemplateJson) ? 'pointer' : 'not-allowed',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
-                whiteSpace: 'nowrap',
               }}
             >
-              <span
-                style={{
-                  width: 22,
-                  height: 22,
-                  borderRadius: '50%',
-                  background: currentStep === tab.step ? '#0070ba' : tab.enabled ? '#e2e8f0' : '#f1f5f9',
-                  color: currentStep === tab.step ? '#fff' : '#64748b',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '0.72rem',
-                  fontWeight: 700,
-                }}
-              >
-                {tab.step}
-              </span>
-              <span>{tab.label}</span>
+              {tab.label}
             </button>
           ))}
         </div>
 
         {/* Scrollable Modal Content */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '20px 24px' }}>
-          {/* STEP 1: Upload Card Image(s) */}
+          {/* STEP 1: Upload Card Image */}
           {currentStep === 1 && (
             <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: '24px' }}>
               <div>
                 <h4 style={{ margin: '0 0 6px 0', fontSize: '0.96rem', fontWeight: 700, color: '#0f172a' }}>
-                  1. Upload Visiting Card ({activeSide.toUpperCase()} SIDE)
+                  Upload Visiting Card ({activeSide.toUpperCase()} SIDE)
                 </h4>
                 <p style={{ margin: '0 0 14px 0', fontSize: '0.8rem', color: '#64748b' }}>
-                  Upload ANY visiting card image. The engine automatically finds edges, straightens skew, in-paints text, and extracts all elements.
+                  Upload any card image. The engine detects graphics, contact icons, and exact positions, and creates a clean plain card template with generic placeholders.
                 </p>
 
-                {/* Front Image Dropzone */}
+                {/* Dropzone */}
                 <div
                   onClick={() => (activeSide === 'front' ? frontFileRef.current?.click() : backFileRef.current?.click())}
                   style={{
@@ -484,6 +490,7 @@ export default function ConvertCardToTemplateModal({
                     padding: '28px 16px',
                     textAlign: 'center',
                     cursor: 'pointer',
+                    transition: 'border-color 0.2s',
                   }}
                 >
                   <input
@@ -493,12 +500,12 @@ export default function ConvertCardToTemplateModal({
                     style={{ display: 'none' }}
                     onChange={activeSide === 'front' ? handleFrontFileChange : handleBackFileChange}
                   />
-                  <UploadCloud size={36} color="#0070ba" style={{ margin: '0 auto 8px auto' }} />
+                  <UploadCloud size={38} color="#0070ba" style={{ margin: '0 auto 8px auto' }} />
                   <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#0f172a' }}>
-                    {currentImage ? `Click to Replace ${activeSide.toUpperCase()} Image` : `Upload ${activeSide.toUpperCase()} Card Image`}
+                    {currentImage ? `Click to Replace ${activeSide.toUpperCase()} Card Image` : `Upload ${activeSide.toUpperCase()} Card Image`}
                   </div>
                   <div style={{ fontSize: '0.76rem', color: '#64748b', marginTop: '4px' }}>
-                    JPG, PNG, WebP &bull; Any size, ratio, or orientation
+                    JPG, PNG, WebP &bull; Any layout, color, or design
                   </div>
                 </div>
 
@@ -510,7 +517,7 @@ export default function ConvertCardToTemplateModal({
                       type="text"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      placeholder="e.g. Acme Tech Visiting Card"
+                      placeholder="e.g. Modern Executive Card Template"
                     />
                   </div>
 
@@ -525,7 +532,7 @@ export default function ConvertCardToTemplateModal({
                 </div>
               </div>
 
-              {/* Preview Column */}
+              {/* Uploaded Card Preview / Extraction Status */}
               <div
                 style={{
                   background: '#f8fafc',
@@ -554,372 +561,212 @@ export default function ConvertCardToTemplateModal({
                       <img src={currentImage} alt="Card Preview" style={{ width: '100%', height: 'auto', display: 'block' }} />
                     </div>
 
-                    {isExtractingOcr ? (
+                    {isExtractingOcr && (
                       <div style={{ padding: '8px 12px', background: '#eff6ff', borderRadius: 6, border: '1px solid #bfdbfe', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.78rem', color: '#1e40af' }}>
                         <RefreshCw size={14} className="animate-spin" />
-                        <span>{ocrStatusText || 'Analyzing card...'}</span>
-                      </div>
-                    ) : (
-                      <div style={{ padding: '8px 12px', background: '#f0fdf4', borderRadius: 6, border: '1px solid #bbf7d0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.78rem', color: '#166534' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <CheckCircle2 size={15} color="#16a34a" />
-                          <span><strong>{ocrExtractedCount} Elements Discovered!</strong></span>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => processCardFile(null, activeSide)}
-                          style={{ background: 'none', border: 'none', color: '#0070ba', fontSize: '0.74rem', fontWeight: 700, cursor: 'pointer', textDecoration: 'underline' }}
-                        >
-                          Re-scan
-                        </button>
+                        <span>{ocrStatusText || 'Analyzing card structure & exact positions...'}</span>
                       </div>
                     )}
                   </div>
                 ) : (
                   <div style={{ textAlign: 'center', color: '#94a3b8' }}>
-                    <ImageIcon size={44} style={{ opacity: 0.4, margin: '0 auto 8px auto' }} />
+                    <UploadCloud size={44} style={{ opacity: 0.4, margin: '0 auto 8px auto' }} />
                     <div style={{ fontSize: '0.88rem', fontWeight: 600 }}>Card Image Preview</div>
-                    <div style={{ fontSize: '0.74rem' }}>Upload an image on the left to see dynamic extraction</div>
+                    <div style={{ fontSize: '0.74rem' }}>Upload an image on the left to extract plain template</div>
                   </div>
                 )}
               </div>
             </div>
           )}
 
-          {/* STEP 2: Dynamically Discovered Elements List */}
+          {/* STEP 2: DUAL VIEW (ORIGINAL VS PLAIN CARD TEMPLATE) + DESIGN STUDIO LAUNCH */}
           {currentStep === 2 && currentTemplateJson && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {/* Header with Blueprint toggle & Actions */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
                 <div>
-                  <h4 style={{ margin: 0, fontSize: '1.02rem', fontWeight: 800, color: '#0f172a' }}>
-                    Discovered Elements & Variables ({activeSide.toUpperCase()} SIDE)
+                  <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800, color: '#0f172a' }}>
+                    Plain Card Template ({activeSide.toUpperCase()} SIDE)
                   </h4>
                   <p style={{ margin: '2px 0 0 0', fontSize: '0.78rem', color: '#64748b' }}>
-                    Every text line, logo, and QR code discovered on the card. Change variable roles or edit text directly.
+                    Graphics, contact icons & exact positions preserved. Personal data replaced with clean template placeholders.
                   </p>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    const newEl = {
-                      id: `text-add-${Date.now()}`,
-                      type: 'text',
-                      role: 'customText',
-                      field: 'customText',
-                      content: 'Custom Field',
-                      defaultValue: 'Custom Field',
-                      x: 100,
-                      y: 100,
-                      width: 180,
-                      height: 28,
-                      fontSize: 16,
-                      color: '#ffffff',
-                    };
-                    setCurrentTemplateJson({
-                      ...currentTemplateJson,
-                      elements: [...(currentTemplateJson.elements || []), newEl],
-                    });
-                  }}
-                  style={{
-                    padding: '6px 12px',
-                    background: '#0070ba',
-                    color: '#ffffff',
-                    border: 'none',
-                    borderRadius: 6,
-                    fontSize: '0.76rem',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                  }}
-                >
-                  <Plus size={13} /> Add Element
-                </button>
-              </div>
-
-              {/* Elements Table */}
-              <div style={{ border: '1px solid #e2e8f0', borderRadius: 8, overflow: 'hidden' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
-                  <thead>
-                    <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0', textAlign: 'left', color: '#475569' }}>
-                      <th style={{ padding: '8px 12px' }}>Role / Variable</th>
-                      <th style={{ padding: '8px 12px' }}>Detected Content</th>
-                      <th style={{ padding: '8px 12px' }}>Coordinates (X, Y)</th>
-                      <th style={{ padding: '8px 12px' }}>Font Size</th>
-                      <th style={{ padding: '8px 12px', textAlign: 'right' }}>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(currentTemplateJson.elements || []).map((el, idx) => (
-                      <tr key={el.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                        <td style={{ padding: '8px 12px' }}>
-                          <select
-                            value={el.role || el.field || 'customText'}
-                            onChange={(e) => {
-                              const roleVal = e.target.value;
-                              const updated = (currentTemplateJson.elements || []).map((item) =>
-                                item.id === el.id ? { ...item, role: roleVal, field: roleVal } : item
-                              );
-                              setCurrentTemplateJson({ ...currentTemplateJson, elements: updated });
-                            }}
-                            style={{ padding: '3px 6px', fontSize: '0.74rem', border: '1px solid #cbd5e1', borderRadius: 4, fontWeight: 700 }}
-                          >
-                            {FIELD_ROLE_TAGS.map((t) => (
-                              <option key={t.value} value={t.value}>{t.label}</option>
-                            ))}
-                          </select>
-                        </td>
-                        <td style={{ padding: '8px 12px' }}>
-                          {el.type === 'text' ? (
-                            <input
-                              type="text"
-                              value={el.content || ''}
-                              onChange={(e) => {
-                                const val = e.target.value;
-                                const updated = (currentTemplateJson.elements || []).map((item) =>
-                                  item.id === el.id ? { ...item, content: val, defaultValue: val } : item
-                                );
-                                setCurrentTemplateJson({ ...currentTemplateJson, elements: updated });
-                              }}
-                              style={{ width: '90%', padding: '3px 6px', fontSize: '0.76rem', border: '1px solid #cbd5e1', borderRadius: 4 }}
-                            />
-                          ) : el.type === 'qr' ? (
-                            <span style={{ color: '#0284c7', fontWeight: 600 }}>QR Code: {el.value || 'URL'}</span>
-                          ) : (
-                            <span style={{ color: '#7c3aed', fontWeight: 600 }}>Image / Graphic Layer</span>
-                          )}
-                        </td>
-                        <td style={{ padding: '8px 12px', color: '#64748b' }}>
-                          ({el.x}, {el.y})
-                        </td>
-                        <td style={{ padding: '8px 12px', color: '#64748b' }}>
-                          {el.fontSize ? `${el.fontSize}px` : '-'}
-                        </td>
-                        <td style={{ padding: '8px 12px', textAlign: 'right' }}>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const updated = (currentTemplateJson.elements || []).filter((item) => item.id !== el.id);
-                              setCurrentTemplateJson({ ...currentTemplateJson, elements: updated });
-                            }}
-                            style={{ background: 'none', border: 'none', color: '#dc2626', cursor: 'pointer', padding: 2 }}
-                            title="Delete"
-                          >
-                            <Trash2 size={13} />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 3: Canvas Editor & Interactive Corrections */}
-          {currentStep === 3 && currentTemplateJson && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
-                <div>
-                  <h4 style={{ margin: 0, fontSize: '1.02rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Edit3 size={17} color="#0070ba" />
-                    Interactive Canvas Editor ({activeSide.toUpperCase()} SIDE)
-                  </h4>
-                  <p style={{ margin: '2px 0 0 0', fontSize: '0.78rem', color: '#64748b' }}>
-                    Drag elements across the card. Double-click any text to edit inline. Use toolbar to add new texts or shapes.
-                  </p>
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <button
                     type="button"
-                    onClick={() => setShowJsonViewer(!showJsonViewer)}
+                    onClick={() => setShowBlueprint(!showBlueprint)}
                     style={{
-                      padding: '5px 10px',
-                      background: showJsonViewer ? '#0f172a' : '#f1f5f9',
-                      color: showJsonViewer ? '#38bdf8' : '#334155',
-                      border: '1px solid #cbd5e1',
-                      borderRadius: 6,
-                      fontSize: '0.74rem',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                    }}
-                  >
-                    <Code size={12} /> {showJsonViewer ? 'Hide JSON' : 'Template JSON'}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setCurrentStep(4)}
-                    style={{
-                      padding: '5px 12px',
-                      background: '#0070ba',
-                      color: '#ffffff',
-                      border: 'none',
+                      padding: '6px 12px',
+                      background: showBlueprint ? '#e0f2fe' : '#ffffff',
+                      color: showBlueprint ? '#0284c7' : '#475569',
+                      border: showBlueprint ? '1.5px solid #7dd3fc' : '1px solid #cbd5e1',
                       borderRadius: 6,
                       fontSize: '0.76rem',
                       fontWeight: 700,
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '4px',
+                      gap: '5px',
                     }}
                   >
-                    <span>Verify (Original ≈ Generated)</span>
-                    <ArrowRight size={13} />
+                    <Tag size={13} /> {showBlueprint ? 'Hide Blueprint Tags' : 'Show Blueprint Tags'}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsStudioOpen(true)}
+                    style={{
+                      padding: '8px 18px',
+                      background: 'linear-gradient(135deg, #0070ba 0%, #2563eb 100%)',
+                      color: '#ffffff',
+                      border: 'none',
+                      borderRadius: 6,
+                      fontSize: '0.82rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      boxShadow: '0 4px 12px rgba(0, 112, 186, 0.3)',
+                    }}
+                  >
+                    <ExternalLink size={14} /> Open in Design Studio to Edit & Review
                   </button>
                 </div>
               </div>
 
-              {/* Interactive Canvas Editor Component */}
-              <InteractiveTemplateCanvas
-                templateJson={currentTemplateJson}
-                onChange={setCurrentTemplateJson}
-              />
-
-              {/* Optional JSON Viewer */}
-              {showJsonViewer && (
-                <div style={{ background: '#0f172a', borderRadius: 8, padding: '12px', border: '1px solid #1e293b' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                    <span style={{ fontSize: '0.76rem', fontWeight: 700, color: '#38bdf8' }}>
-                      Canonical Template Schema (v2)
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        navigator.clipboard.writeText(JSON.stringify(currentTemplateJson, null, 2));
-                        if (showToast) showToast('Template JSON copied!', 'success');
-                      }}
-                      style={{ background: '#1e293b', border: '1px solid #334155', color: '#fff', padding: '2px 6px', fontSize: '0.7rem', borderRadius: 4, cursor: 'pointer' }}
-                    >
-                      Copy
-                    </button>
+              {/* DUAL VIEW COMPARISON */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', alignItems: 'start' }}>
+                {/* 1. ORIGINAL SCAN REFERENCE */}
+                <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: 14 }}>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#475569', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#94a3b8' }} />
+                    ORIGINAL UPLOADED CARD (REFERENCE)
                   </div>
-                  <pre style={{ margin: 0, fontSize: '0.72rem', color: '#cbd5e1', maxHeight: 200, overflowY: 'auto' }}>
-                    {JSON.stringify(currentTemplateJson, null, 2)}
-                  </pre>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* STEP 4: Visual Verification & Comparison */}
-          {currentStep === 4 && currentTemplateJson && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
-                <div>
-                  <h4 style={{ margin: 0, fontSize: '1.02rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Sliders size={17} color="#0070ba" />
-                    Visual Verification: ORIGINAL ≈ GENERATED ({activeSide.toUpperCase()} SIDE)
-                  </h4>
-                  <p style={{ margin: '2px 0 0 0', fontSize: '0.78rem', color: '#64748b' }}>
-                    Validate pixel alignment using Side-by-Side, Overlay Slider, or Difference Heatmap modes.
-                  </p>
+                  <div style={{ borderRadius: 8, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', border: '1px solid #cbd5e1' }}>
+                    <img src={currentImage} alt="Original Scan" style={{ width: '100%', height: 'auto', display: 'block' }} />
+                  </div>
                 </div>
 
-                {/* Publishing Status Selector */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '0.76rem', fontWeight: 700, color: '#475569' }}>Target Status:</span>
-                  <select
-                    value={templateStatus}
-                    onChange={(e) => setTemplateStatus(e.target.value)}
-                    style={{ fontSize: '0.76rem', padding: '4px 8px', border: '1px solid #cbd5e1', borderRadius: 4, fontWeight: 700 }}
-                  >
-                    <option value="NEEDS_REVIEW">NEEDS_REVIEW</option>
-                    <option value="APPROVED">APPROVED</option>
-                    <option value="PUBLISHED">PUBLISHED</option>
-                  </select>
+                {/* 2. PLAIN CARD TEMPLATE AT EXACT POSITIONS */}
+                <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: 14 }}>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#0284c7', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#0284c7' }} />
+                    GENERATED PLAIN TEMPLATE (EXACT POSITIONS & ICONS)
+                  </div>
+                  <PlainCardPreview templateJson={currentTemplateJson} showBlueprint={showBlueprint} />
                 </div>
               </div>
 
-              {/* 5-Mode Comparison Component */}
-              <OriginalVsGeneratedOverlay
-                originalImageUrl={currentImage}
-                templateJson={currentTemplateJson}
-                renderedImageUrl={currentRenderedUrl}
-                diffImageUrl={currentDiffImageUrl}
-                similarityScore={currentSimilarity}
-                detectedOrientation={currentOrientation}
-              />
+              {/* Discovered Element Coordinates Table */}
+              <div style={{ border: '1px solid #e2e8f0', borderRadius: 10, overflow: 'hidden' }}>
+                <div style={{ background: '#f1f5f9', padding: '8px 14px', fontSize: '0.78rem', fontWeight: 800, color: '#334155' }}>
+                  Detected Layout Elements ({currentTemplateJson.elements?.length || 0})
+                </div>
+                <div style={{ maxHeight: 200, overflowY: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.76rem' }}>
+                    <thead>
+                      <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0', textAlign: 'left', color: '#64748b' }}>
+                        <th style={{ padding: '6px 12px' }}>Role</th>
+                        <th style={{ padding: '6px 12px' }}>Placeholder Value</th>
+                        <th style={{ padding: '6px 12px' }}>Position (X, Y)</th>
+                        <th style={{ padding: '6px 12px' }}>Icon</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(currentTemplateJson.elements || []).map((el, idx) => (
+                        <tr key={el.id || idx} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                          <td style={{ padding: '6px 12px', fontWeight: 700, color: '#0284c7' }}>
+                            {el.role ? `[${el.role.toUpperCase()}]` : '[FIELD]'}
+                          </td>
+                          <td style={{ padding: '6px 12px', color: '#1e293b' }}>
+                            {el.content || el.value || 'Logo / Graphic'}
+                          </td>
+                          <td style={{ padding: '6px 12px', color: '#64748b' }}>
+                            x: {Math.round(el.x)}, y: {Math.round(el.y)}
+                          </td>
+                          <td style={{ padding: '6px 12px', color: '#475569' }}>
+                            {el.icon ? `${el.icon} icon` : '—'}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           )}
         </div>
 
-        {/* Modal Footer Controls */}
+        {/* Modal Footer Bar */}
         <div
           className="admin-modal-footer"
           style={{
             padding: '12px 24px',
-            background: '#f8fafc',
             borderTop: '1px solid #e2e8f0',
+            background: '#ffffff',
             display: 'flex',
-            justifyContent: 'space-between',
             alignItems: 'center',
+            justifyContent: 'space-between',
             flexShrink: 0,
           }}
         >
-          {currentStep > 1 ? (
-            <button
-              type="button"
-              className="admin-btn-secondary"
-              onClick={() => setCurrentStep((prev) => prev - 1)}
-            >
-              <ArrowLeft size={14} />
-              <span>Back</span>
-            </button>
-          ) : (
-            <div />
-          )}
+          <div>
+            {currentStep === 2 && (
+              <button
+                type="button"
+                className="admin-btn secondary"
+                onClick={() => setCurrentStep(1)}
+                style={{ fontSize: '0.8rem' }}
+              >
+                ← Back to Upload
+              </button>
+            )}
+          </div>
 
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button type="button" className="admin-btn-secondary" onClick={onClose}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <button type="button" className="admin-btn secondary" onClick={onClose} style={{ fontSize: '0.8rem' }}>
               Cancel
             </button>
 
-            {currentStep < 4 ? (
+            {currentStep === 2 && (
               <>
-                {currentStep >= 2 && (
-                  <button
-                    type="button"
-                    className="admin-btn-secondary"
-                    onClick={handleSaveTemplate}
-                    disabled={isProcessing || !frontImage}
-                    style={{ borderColor: '#0070ba', color: '#0070ba' }}
-                  >
-                    <Check size={14} />
-                    <span>Quick Save</span>
-                  </button>
-                )}
                 <button
                   type="button"
-                  className="admin-btn-primary"
-                  disabled={!frontImage}
-                  onClick={() => setCurrentStep((prev) => prev + 1)}
-                  style={{ opacity: frontImage ? 1 : 0.5, cursor: frontImage ? 'pointer' : 'not-allowed' }}
+                  className="admin-btn"
+                  onClick={handleQuickPublish}
+                  disabled={isProcessing}
+                  style={{
+                    background: '#10b981',
+                    color: '#ffffff',
+                    border: 'none',
+                    fontWeight: 700,
+                    fontSize: '0.82rem',
+                    padding: '8px 18px',
+                    borderRadius: 6,
+                  }}
                 >
-                  <span>Continue to Step {currentStep + 1}</span>
-                  <ArrowRight size={14} />
+                  {isProcessing ? 'Publishing...' : '✓ Quick Publish Template'}
+                </button>
+
+                <button
+                  type="button"
+                  className="admin-btn primary"
+                  onClick={() => setIsStudioOpen(true)}
+                  style={{
+                    background: 'linear-gradient(135deg, #0070ba 0%, #2563eb 100%)',
+                    fontWeight: 800,
+                    fontSize: '0.82rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                  }}
+                >
+                  <ExternalLink size={14} /> Open in Design Studio
                 </button>
               </>
-            ) : (
-              <button
-                type="button"
-                className="admin-btn-primary"
-                onClick={handleSaveTemplate}
-                disabled={isProcessing}
-                style={{
-                  background: 'linear-gradient(135deg, #0070ba 0%, #004494 100%)',
-                  border: 'none',
-                }}
-              >
-                <Sparkles size={14} />
-                <span>{isProcessing ? 'Saving Template...' : `Save & Set as [${templateStatus}]`}</span>
-              </button>
             )}
           </div>
         </div>

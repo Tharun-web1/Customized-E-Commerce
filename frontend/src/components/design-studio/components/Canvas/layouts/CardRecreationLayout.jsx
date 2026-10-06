@@ -53,10 +53,8 @@ export default function CardRecreationLayout({
 }) {
   const tJson = activeTemplate?.text_positions?.templateJson;
 
-  // 1. HYBRID RECONSTRUCTED CARD ENGINE:
-  // If template contains a clean inpainted background graphic & detected elements,
-  // render the exact 2D coordinate design on top of the original card artwork!
-  if (tJson?.background?.cleanArtworkSrc) {
+  // 1. DYNAMIC RECONSTRUCTED / PLAIN CARD ENGINE:
+  if (tJson && (tJson.elements?.length > 0 || tJson.background?.cleanArtworkSrc)) {
     const cW = tJson.canvas?.width || 1050;
     const cH = tJson.canvas?.height || 600;
     const elements = tJson.elements || [];
@@ -68,26 +66,66 @@ export default function CardRecreationLayout({
           width: '100%',
           position: 'relative',
           overflow: 'hidden',
-          background: tJson.background?.color || '#151b2d',
+          background: tJson.background?.color || '#ffffff',
           boxSizing: 'border-box',
         }}
       >
-        {/* Layer 0: Pristine Inpainted Background Graphic */}
-        <img
-          src={tJson.background.cleanArtworkSrc}
-          alt="Card Background"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'fill',
-            pointerEvents: 'none',
-            zIndex: 1,
-          }}
-        />
+        {/* Layer 0: Pristine Background Graphic (if present) */}
+        {tJson.background?.cleanArtworkSrc && (
+          <img
+            src={tJson.background.cleanArtworkSrc}
+            alt="Card Background"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'fill',
+              pointerEvents: 'none',
+              zIndex: 1,
+            }}
+          />
+        )}
 
-        {/* Dynamic Reconstructed Elements */}
+        {/* Layer 1: Graphics (Split Panels, Accent Lines) */}
+        {(tJson.graphics || []).map((g) => {
+          if (g.type === 'panel') {
+            return (
+              <div
+                key={g.id}
+                style={{
+                  position: 'absolute',
+                  left: `${(g.x / cW) * 100}%`,
+                  top: 0,
+                  width: `${(g.width / cW) * 100}%`,
+                  height: '100%',
+                  background: g.fill,
+                  zIndex: g.zIndex || 2,
+                }}
+              />
+            );
+          }
+          if (g.type === 'line') {
+            return (
+              <div
+                key={g.id}
+                style={{
+                  position: 'absolute',
+                  left: `${(g.x / cW) * 100}%`,
+                  top: `${(g.y / cH) * 100}%`,
+                  width: `${(g.width / cW) * 100}%`,
+                  height: Math.max(2, g.height),
+                  background: g.fill,
+                  borderRadius: 1,
+                  zIndex: g.zIndex || 4,
+                }}
+              />
+            );
+          }
+          return null;
+        })}
+
+        {/* Layer 2: Dynamic Reconstructed Elements */}
         {elements.map((el) => {
           if (el.visible === false) return null;
           const leftPercent = (el.x / cW) * 100;
@@ -111,6 +149,47 @@ export default function CardRecreationLayout({
             );
           }
 
+          if (el.type === 'logo_placeholder') {
+            return (
+              <div
+                key={el.id}
+                style={{
+                  position: 'absolute',
+                  left: `${leftPercent}%`,
+                  top: `${topPercent}%`,
+                  zIndex: el.zIndex || 20,
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  if (!isPreview && setActiveTool) setActiveTool('uploads');
+                }}
+              >
+                {uploadedLogo ? (
+                  renderAdjustableLogo(isPreview)
+                ) : (
+                  <div
+                    style={{
+                      width: 52,
+                      height: 52,
+                      borderRadius: '50%',
+                      background: el.badgeBg || 'rgba(0, 112, 186, 0.1)',
+                      border: `2px solid ${el.accentColor || '#0070ba'}`,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    }}
+                  >
+                    <span style={{ fontSize: '11px', fontWeight: 900, color: el.accentColor || '#0070ba' }}>
+                      LOGO
+                    </span>
+                  </div>
+                )}
+              </div>
+            );
+          }
+
           if (el.type === 'qr') {
             return (
               <div
@@ -129,13 +208,54 @@ export default function CardRecreationLayout({
 
           if (el.type === 'text') {
             let studioKey = 'customText';
-            if (el.field === 'personName') studioKey = 'fullName';
-            else if (el.field === 'designation') studioKey = 'jobTitle';
-            else if (el.field === 'companyName') studioKey = 'companyName';
-            else if (el.field === 'phone') studioKey = 'phone';
-            else if (el.field === 'email') studioKey = 'email';
-            else if (el.field === 'website') studioKey = 'website';
-            else if (el.field === 'address') studioKey = 'address';
+            if (el.field === 'personName' || el.role === 'fullName') studioKey = 'fullName';
+            else if (el.field === 'designation' || el.role === 'jobTitle') studioKey = 'jobTitle';
+            else if (el.field === 'companyName' || el.role === 'companyName') studioKey = 'companyName';
+            else if (el.field === 'companyMessage' || el.role === 'companyMessage') studioKey = 'companyMessage';
+            else if (el.field === 'phone' || el.role === 'phone') studioKey = 'phone';
+            else if (el.field === 'email' || el.role === 'email') studioKey = 'email';
+            else if (el.field === 'website' || el.role === 'web') studioKey = 'web';
+            else if (el.field === 'address' || el.role === 'address1') studioKey = 'address1';
+
+            const renderIconSvg = () => {
+              if (!el.icon) return null;
+              const iconColor = tJson.background?.accentColor || '#38bdf8';
+              const badgeBg = tJson.background?.badgeBg || 'rgba(56, 189, 248, 0.15)';
+              return (
+                <div
+                  style={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: '50%',
+                    background: badgeBg,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    marginRight: 6,
+                  }}
+                >
+                  {el.icon === 'phone' && (
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" color={iconColor}>
+                      <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.72 11.72 0 003.68.59 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.72 11.72 0 00.59 3.68 1 1 0 01-.24 1.02l-2.23 2.09z" />
+                    </svg>
+                  )}
+                  {el.icon === 'mail' && (
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" color={iconColor}>
+                      <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                    </svg>
+                  )}
+                  {el.icon === 'globe' && (
+                    <span style={{ fontSize: 10 }}>🌐</span>
+                  )}
+                  {el.icon === 'mapPin' && (
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" color={iconColor}>
+                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" />
+                    </svg>
+                  )}
+                </div>
+              );
+            };
 
             return (
               <div
@@ -146,15 +266,18 @@ export default function CardRecreationLayout({
                   top: `${topPercent}%`,
                   zIndex: el.zIndex || 10,
                   whiteSpace: 'nowrap',
+                  display: 'flex',
+                  alignItems: 'center',
                 }}
               >
+                {renderIconSvg()}
                 {renderCanvasElement(
                   studioKey,
                   el.content || el.defaultValue,
                   {
                     fontSize: Math.round((el.fontSize || 16) * 0.95),
                     fontWeight: el.fontWeight || 600,
-                    color: el.color || '#ffffff',
+                    color: el.color || tJson.background?.textPrimary || '#0f172a',
                     lineHeight: 1.15,
                     letterSpacing: el.letterSpacing || -0.2,
                     textAlign: el.alignment || 'left',

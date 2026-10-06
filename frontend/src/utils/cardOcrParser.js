@@ -202,10 +202,12 @@ export async function extractCardDetailsFromImage(imageDataUrl, onProgress = nul
     await worker.terminate();
 
     const rawText = result?.data?.text || '';
+    const lines = result?.data?.lines || [];
     const parsed = parseVisitingCardText(rawText);
 
     return {
       rawText,
+      lines,
       ...parsed,
     };
   } catch (error) {

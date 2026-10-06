@@ -300,7 +300,7 @@ export default function TemplateCardMockup({ template, onSelect }) {
               </div>
             )}
           </div>
-        ) : (template.text_positions?.templateJson?.background?.cleanArtworkSrc) ? (
+        ) : (template.text_positions?.templateJson?.elements?.length > 0) ? (
           <div
             className={`vp-card-canvas layout-card-recreation ${template.orientation === 'vertical' ? 'vertical' : ''}`}
             style={{
@@ -308,24 +308,66 @@ export default function TemplateCardMockup({ template, onSelect }) {
               overflow: 'hidden',
               width: '100%',
               height: '100%',
-              background: template.text_positions?.templateJson?.background?.color || '#151b2d',
+              background: template.text_positions?.templateJson?.background?.color || '#ffffff',
               boxSizing: 'border-box',
             }}
           >
-            {/* Clean Background Image */}
-            <img
-              src={template.text_positions.templateJson.background.cleanArtworkSrc}
-              alt="Card Background"
-              style={{
-                position: 'absolute',
-                inset: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'fill',
-                pointerEvents: 'none',
-                zIndex: 1,
-              }}
-            />
+            {/* Clean Background Image (if present) */}
+            {template.text_positions.templateJson.background?.cleanArtworkSrc && (
+              <img
+                src={template.text_positions.templateJson.background.cleanArtworkSrc}
+                alt="Card Background"
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'fill',
+                  pointerEvents: 'none',
+                  zIndex: 1,
+                }}
+              />
+            )}
+
+            {/* Graphics Layer (Split panels, accent lines) */}
+            {(template.text_positions.templateJson.graphics || []).map((g) => {
+              const cW = template.text_positions.templateJson.canvas?.width || 1050;
+              const cH = template.text_positions.templateJson.canvas?.height || 600;
+              if (g.type === 'panel') {
+                return (
+                  <div
+                    key={g.id}
+                    style={{
+                      position: 'absolute',
+                      left: `${(g.x / cW) * 100}%`,
+                      top: 0,
+                      width: `${(g.width / cW) * 100}%`,
+                      height: '100%',
+                      background: g.fill,
+                      zIndex: g.zIndex || 2,
+                    }}
+                  />
+                );
+              }
+              if (g.type === 'line') {
+                return (
+                  <div
+                    key={g.id}
+                    style={{
+                      position: 'absolute',
+                      left: `${(g.x / cW) * 100}%`,
+                      top: `${(g.y / cH) * 100}%`,
+                      width: `${(g.width / cW) * 100}%`,
+                      height: Math.max(2, g.height),
+                      background: g.fill,
+                      borderRadius: 1,
+                      zIndex: g.zIndex || 4,
+                    }}
+                  />
+                );
+              }
+              return null;
+            })}
 
             {/* Elements Layer with Normalized Scale */}
             {(template.text_positions.templateJson.elements || []).map((el) => {

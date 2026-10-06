@@ -15,7 +15,6 @@ import {
 } from 'lucide-react';
 import { fetchTemplates, createTemplate, updateTemplate, deleteTemplate } from '../../api';
 import TemplateCardMockup from '../TemplateCardMockup';
-import ConvertCardToTemplateModal from './ConvertCardToTemplateModal';
 import '../../css/admin/AdminCardTemplates.css';
 
 export default function AdminCardTemplatesPage({
@@ -31,7 +30,6 @@ export default function AdminCardTemplatesPage({
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isConvertModalOpen, setIsConvertModalOpen] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState(null);
 
   const initialForm = {
@@ -206,21 +204,7 @@ export default function AdminCardTemplatesPage({
         </div>
 
         <div style={{ display: 'flex', gap: '10px' }}>
-          <button
-            type="button"
-            className="admin-btn-primary"
-            style={{
-              background: 'linear-gradient(135deg, #0070ba 0%, #004494 100%)',
-              border: 'none',
-              boxShadow: '0 2px 6px rgba(0, 112, 186, 0.25)',
-            }}
-            onClick={() => setIsConvertModalOpen(true)}
-          >
-            <Sparkles size={15} />
-            <span>Convert Card Image to Template</span>
-          </button>
-
-          <button type="button" className="admin-btn-secondary" onClick={handleOpenAdd}>
+          <button type="button" className="admin-btn-primary" onClick={handleOpenAdd}>
             <Plus size={15} />
             <span>Add Preset</span>
           </button>
@@ -502,17 +486,7 @@ export default function AdminCardTemplatesPage({
         </div>
       )}
 
-      {/* Convert Card to Template Modal Wizard */}
-      <ConvertCardToTemplateModal
-        isOpen={isConvertModalOpen}
-        onClose={() => setIsConvertModalOpen(false)}
-        cards={card ? [card] : []}
-        onRefreshData={() => {
-          loadCardTemplates();
-          if (onRefreshData) onRefreshData();
-        }}
-        showToast={showToast}
-      />
+
     </div>
   );
 }

@@ -87,8 +87,6 @@ export default function VistaprintDesignStudio({
   allTemplates = [],
   onClose,
   onAddToCart,
-  isAdminReview = false,
-  onAdminPublishTemplate,
 }) {
   const currentCard = card || {
     title: 'Standard Visiting Cards',
@@ -2686,113 +2684,6 @@ export default function VistaprintDesignStudio({
         {renderCardSurfaceContent('back', true)}
       </div>
 
-      {/* ADMIN REVIEW TOP BANNER */}
-      {isAdminReview && (
-        <div
-          style={{
-            background: 'linear-gradient(90deg, #0f172a 0%, #1e293b 100%)',
-            color: '#ffffff',
-            padding: '10px 24px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            borderBottom: '2px solid #0070ba',
-            zIndex: 1000,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span
-              style={{
-                background: '#0070ba',
-                color: '#ffffff',
-                padding: '4px 10px',
-                borderRadius: 4,
-                fontWeight: 800,
-                fontSize: '11px',
-                letterSpacing: '0.5px',
-              }}
-            >
-              ADMIN TEMPLATE STUDIO
-            </span>
-            <span style={{ fontSize: '13px', fontWeight: 600, color: '#e2e8f0' }}>
-              Reviewing & Customizing Plain Card Template: <strong style={{ color: '#38bdf8' }}>{activeTemplate?.title || 'Template'}</strong>
-            </span>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <button
-              type="button"
-              onClick={onClose}
-              style={{
-                background: 'rgba(255,255,255,0.1)',
-                border: '1px solid rgba(255,255,255,0.2)',
-                color: '#ffffff',
-                padding: '6px 14px',
-                borderRadius: 6,
-                fontWeight: 600,
-                cursor: 'pointer',
-                fontSize: '12px',
-                transition: 'background 0.2s',
-              }}
-            >
-              ← Back to Review Modal
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                if (onAdminPublishTemplate) {
-                  onAdminPublishTemplate({
-                    ...(activeTemplate || {}),
-                    orientation,
-                    primary_color: activeColor || activeTemplate?.primary_color || '#0070ba',
-                    layout_type: 'card_recreation',
-                    preview_style: 'card_recreation',
-                    sample_name: fields.fullName || 'Full Name',
-                    sample_job_title: fields.jobTitle || 'Job Title',
-                    sample_company: fields.companyName || 'COMPANY NAME',
-                    sample_tagline: fields.companyMessage || 'Your Business Tagline Here',
-                    sample_phone: fields.phone || '+1 (555) 000-0000',
-                    sample_email: fields.email || 'contact@company.com',
-                    text_positions: {
-                      ...(activeTemplate?.text_positions || {}),
-                      card_recreation: true,
-                      status: 'PUBLISHED',
-                      templateJson: {
-                        ...(activeTemplate?.text_positions?.templateJson || {}),
-                        canvas: {
-                          ...(activeTemplate?.text_positions?.templateJson?.canvas || {}),
-                          orientation,
-                        },
-                        background: {
-                          ...(activeTemplate?.text_positions?.templateJson?.background || {}),
-                          color: cardBackground?.front?.value || activeTemplate?.text_positions?.templateJson?.background?.color || '#ffffff',
-                        },
-                      },
-                    },
-                  });
-                }
-              }}
-              style={{
-                background: '#10b981',
-                border: 'none',
-                color: '#ffffff',
-                padding: '7px 20px',
-                borderRadius: 6,
-                fontWeight: 700,
-                cursor: 'pointer',
-                fontSize: '13px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                boxShadow: '0 2px 8px rgba(16, 185, 129, 0.4)',
-              }}
-            >
-              ✓ Save & Publish Template
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* 1. TOP NAVIGATION BAR */}
       <StudioTopbar

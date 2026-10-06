@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Plus, Trash2, Sparkles, Image as ImageIcon } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { createTemplate, deleteTemplate } from '../../api';
-import ConvertCardToTemplateModal from './ConvertCardToTemplateModal';
 import TemplateCardMockup from '../TemplateCardMockup';
 
 export default function AdminTemplates({
@@ -12,7 +11,6 @@ export default function AdminTemplates({
   isModalOpen,
   setIsModalOpen,
 }) {
-  const [isConvertModalOpen, setIsConvertModalOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState('ALL');
 
   const filteredTemplates = templates.filter((t) => {
@@ -76,20 +74,6 @@ export default function AdminTemplates({
           <button
             type="button"
             className="admin-btn-primary"
-            style={{
-              background: 'linear-gradient(135deg, #0070ba 0%, #004494 100%)',
-              border: 'none',
-              boxShadow: '0 2px 6px rgba(0, 112, 186, 0.25)',
-            }}
-            onClick={() => setIsConvertModalOpen(true)}
-          >
-            <Sparkles size={14} />
-            <span>Convert Card Image to Template</span>
-          </button>
-
-          <button
-            type="button"
-            className="admin-btn-secondary"
             onClick={() => setIsModalOpen(true)}
           >
             <Plus size={14} />
@@ -238,14 +222,7 @@ export default function AdminTemplates({
       })}
     </div>
 
-      {/* Convert Card to Template Modal Wizard */}
-      <ConvertCardToTemplateModal
-        isOpen={isConvertModalOpen}
-        onClose={() => setIsConvertModalOpen(false)}
-        cards={cards}
-        onRefreshData={onRefreshData}
-        showToast={showToast}
-      />
+
 
       {isModalOpen && (
         <div className="admin-modal-overlay" onClick={() => setIsModalOpen(false)}>

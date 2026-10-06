@@ -66,7 +66,19 @@ export const HomeScreen = ({ navigation }) => {
 
   const handleBannerPress = (banner) => {
     if (navigation && navigation.navigate) {
-      navigation.navigate('BrowseTemplates', { category: banner.category });
+      if (banner.category === 'visiting-cards') {
+        navigation.navigate('ProductDetail', {
+          card: {
+            id: 1,
+            title: 'Standard Visiting Cards',
+            slug: 'visiting-cards',
+            price: 200,
+            description: 'Premium High-Definition Visiting Cards with Matte/Gloss finish.',
+          },
+        });
+      } else {
+        navigation.navigate('BrowseTemplates', { category: banner.category });
+      }
     }
   };
 

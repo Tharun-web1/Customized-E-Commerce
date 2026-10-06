@@ -1,0 +1,192 @@
+/* ================= REVIEW YOUR DESIGN SPLIT-SCREEN MODAL ================= */
+.vp-review-design-modal {
+  background: #ffffff;
+  border-radius: 14px;
+  width: 1140px;
+  max-width: 95vw;
+  height: 660px;
+  max-height: 92vh;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  animation: vpPreviewSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vp-review-stage-col {
+  flex: 1.45;
+  background: #f4f5f8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 20px 24px;
+  position: relative;
+  border-right: 1px solid #e5e7eb;
+  user-select: none;
+  overflow: hidden;
+}
+
+.vp-review-info-col {
+  flex: 1;
+  background: #ffffff;
+  padding: 40px 42px 34px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.vp-review-close-square {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 38px;
+  height: 38px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #1e293b;
+  transition: all 0.15s ease;
+}
+
+.vp-review-close-square:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.vp-review-content-body {
+  margin-top: 8px;
+}
+
+.vp-review-title {
+  font-size: 1.95rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 12px 0;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  padding-right: 40px;
+}
+
+.vp-review-subtitle {
+  font-size: 0.95rem;
+  color: #475569;
+  margin: 0 0 28px 0;
+  line-height: 1.45;
+}
+
+.vp-review-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.vp-review-checklist li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 0.94rem;
+  color: #1e293b;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.vp-review-checklist li::before {
+  content: "•";
+  position: absolute;
+  left: 2px;
+  top: -1px;
+  color: #64748b;
+  font-size: 1.15rem;
+}
+
+.vp-review-bottom-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+.vp-review-checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  color: #1e293b;
+  line-height: 1.4;
+  user-select: none;
+  margin-bottom: 8px;
+}
+
+.vp-review-checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: #0099ff;
+  flex-shrink: 0;
+}
+
+.vp-review-continue-btn {
+  width: 100%;
+  height: 48px;
+  background: #56c5f5;
+  color: #0f172a;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vp-review-continue-btn:hover {
+  background: #3ebcf2;
+  box-shadow: 0 4px 12px rgba(86, 197, 245, 0.35);
+}
+
+.vp-review-continue-btn:active {
+  transform: scale(0.99);
+}
+
+.vp-review-edit-btn {
+  width: 100%;
+  height: 48px;
+  background: #ffffff;
+  color: #0f172a;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vp-review-edit-btn:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.vp-review-edit-btn:active {
+  transform: scale(0.99);
+}
+

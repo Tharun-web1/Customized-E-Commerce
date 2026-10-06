@@ -1,0 +1,30 @@
+/* ================= ADJUSTABLE LOGO & LOGO MODAL STYLES ================= */
+.vp-adjustable-logo-wrapper {
+  position: relative;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.vp-adjustable-logo-wrapper:hover:not(.active-selected) {
+  border-color: #0099ff !important;
+  background-color: rgba(224, 242, 254, 0.4) !important;
+}
+
+.vp-adjustable-logo-wrapper.active-selected {
+  outline: 2px solid #0099ff !important;
+  outline-offset: 2px;
+  z-index: 30 !important;
+}
+
+.vp-logo-modal-box {
+  animation: vpPreviewSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vp-logo-dropzone {
+  transition: all 0.2s ease;
+}
+
+.vp-logo-dropzone:hover {
+  border-color: #0099ff !important;
+  background-color: #f0f9ff !important;
+}
+

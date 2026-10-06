@@ -1,0 +1,1242 @@
+/* ================= 3. CENTER CANVAS WORKSPACE ================= */
+.vp-studio-canvas-area {
+  flex: 1;
+  background: #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: auto;
+  padding: 40px;
+}
+
+/* Outer Dimension Bounds Layout */
+.vp-studio-stage-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Top Margin Badges */
+.vp-studio-badges-row {
+  width: 580px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.vp-safety-pill,
+.vp-bleed-pill {
+  font-size: 0.7rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 3px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.vp-safety-pill {
+  color: #15803d;
+  background: #dcfce7;
+  border: 1.5px solid #86efac;
+}
+
+.vp-safety-pill:hover,
+.vp-safety-pill.active-guide {
+  background: #bbf7d0;
+  border-color: #16a34a;
+  color: #14532d;
+  transform: translateY(-1px) scale(1.04);
+  box-shadow: 0 3px 10px rgba(22, 163, 74, 0.25);
+}
+
+.vp-safety-pill.pinned {
+  background: #16a34a;
+  border-color: #15803d;
+  color: #ffffff;
+}
+
+.vp-bleed-pill {
+  color: #0284c7;
+  background: #e0f2fe;
+  border: 1.5px solid #7dd3fc;
+}
+
+.vp-bleed-pill:hover,
+.vp-bleed-pill.active-guide {
+  background: #bae6fd;
+  border-color: #0284c7;
+  color: #0369a1;
+  transform: translateY(-1px) scale(1.04);
+  box-shadow: 0 3px 10px rgba(2, 132, 199, 0.25);
+}
+
+.vp-bleed-pill.pinned {
+  background: #0099ff;
+  border-color: #0284c7;
+  color: #ffffff;
+}
+
+.vp-guide-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.vp-guide-dot.safety {
+  background: #16a34a;
+  box-shadow: 0 0 4px rgba(22, 163, 74, 0.6);
+}
+
+.vp-safety-pill.pinned .vp-guide-dot.safety {
+  background: #ffffff;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+}
+
+.vp-guide-dot.bleed {
+  background: #0099ff;
+  box-shadow: 0 0 4px rgba(0, 153, 255, 0.6);
+}
+
+.vp-bleed-pill.pinned .vp-guide-dot.bleed {
+  background: #ffffff;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+}
+
+.vp-pinned-badge {
+  font-size: 0.58rem;
+  background: rgba(0, 0, 0, 0.12);
+  padding: 1px 5px;
+  border-radius: 4px;
+  margin-left: 2px;
+}
+
+.vp-unit-pill {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #0f172a;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 9999px;
+  padding: 2px 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.vp-unit-pill:hover {
+  background: #f1f5f9;
+  border-color: #0099ff;
+  color: #0056b3;
+}
+
+/* Center Stage with Measurement Lines */
+.vp-stage-center-box {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+/* Vertical Dimension Marker (Left) */
+.vp-dimension-left {
+  position: absolute;
+  left: -86px;
+  top: 0;
+  bottom: 0;
+  width: 76px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 600;
+  user-select: none;
+}
+
+.vp-dimension-v-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 6px;
+  width: 1px;
+  background: #94a3b8;
+}
+
+.vp-dimension-v-line::before,
+.vp-dimension-v-line::after {
+  content: '';
+  position: absolute;
+  left: -4px;
+  width: 9px;
+  height: 1px;
+  background: #94a3b8;
+}
+
+.vp-dimension-v-line::before { top: 0; }
+.vp-dimension-v-line::after { bottom: 0; }
+
+.vp-dimension-val-rotate {
+  background: #f1f5f9;
+  padding: 3px 6px;
+  border-radius: 4px;
+  z-index: 2;
+  white-space: nowrap;
+  font-size: 0.72rem;
+  transition: all 0.15s ease;
+}
+
+.vp-dimension-left:hover .vp-dimension-val-rotate,
+.vp-dimension-bottom:hover .vp-dimension-h-val {
+  background: #e2e8f0;
+  color: #0056b3;
+}
+
+/* Horizontal Dimension Marker (Bottom) */
+.vp-dimension-bottom {
+  margin-top: 10px;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.vp-dimension-h-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: #94a3b8;
+}
+
+.vp-dimension-h-line::before,
+.vp-dimension-h-line::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  width: 1px;
+  height: 9px;
+  background: #94a3b8;
+}
+
+.vp-dimension-h-line::before { left: 0; }
+.vp-dimension-h-line::after { right: 0; }
+
+.vp-dimension-h-val {
+  background: #f1f5f9;
+  padding: 0 8px;
+  z-index: 2;
+  margin-top: 4px;
+}
+
+/* THE EDITABLE CARD BOARD */
+.vp-stage-card-board {
+  width: 580px;
+  height: 330px;
+  background: #ffffff;
+  border: 1.5px solid #0099ff; /* Blue Cut/Bleed boundary line */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  position: relative;
+  padding: 16px;
+  box-sizing: border-box;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Card Board Guide Reflection States */
+.vp-stage-card-board.guide-bleed-active {
+  border: 2.5px solid #0099ff !important;
+  box-shadow: 0 0 0 3px rgba(0, 153, 255, 0.25), 0 14px 40px rgba(0, 153, 255, 0.28) !important;
+}
+
+.vp-stage-card-board.guide-safety-active {
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2), 0 14px 36px rgba(0, 0, 0, 0.16) !important;
+}
+
+/* Inner Dotted Green Safety Area (1mm Cut Margin) */
+.vp-safety-guide-inner {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  border: 1px dashed #16a34a; /* Green Safety Guide line (1mm from cut) */
+  pointer-events: none;
+  z-index: 5;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+/* Inner Safety Guide Active Reflection */
+.vp-safety-guide-inner.active-highlight {
+  border: 2px dashed #16a34a !important;
+  background: rgba(34, 197, 94, 0.08) !important;
+  box-shadow: 0 0 16px rgba(22, 163, 74, 0.45), inset 0 0 16px rgba(22, 163, 74, 0.08) !important;
+  z-index: 40 !important;
+}
+
+/* Outer Danger / Trim Risk Margin Perimeter Strip (1mm from edge: 6px) */
+.vp-trim-risk-perimeter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 38;
+  border: 6px solid rgba(239, 68, 68, 0.22);
+  box-sizing: border-box;
+  animation: vpFadeIn 0.2s ease-out;
+}
+
+/* Bleed Area Active Overlay */
+.vp-bleed-guide-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 39;
+  background: rgba(0, 153, 255, 0.09);
+  box-shadow: inset 0 0 20px rgba(0, 153, 255, 0.28);
+  animation: vpFadeIn 0.2s ease-out;
+}
+
+/* Floating Informational Banners inside the Card */
+.vp-guide-floating-banner {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 90%;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-align: center;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.16);
+  z-index: 50;
+  pointer-events: none;
+  animation: vpFadeSlideDown 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.vp-guide-floating-banner.safety {
+  background: #ffffff;
+  color: #14532d;
+  border: 1.5px solid #16a34a;
+}
+
+.vp-guide-floating-banner.bleed {
+  background: #ffffff;
+  color: #0369a1;
+  border: 1.5px solid #0099ff;
+}
+
+.vp-bleed-tag {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #0284c7;
+  background: #ffffff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid #7dd3fc;
+  box-shadow: 0 2px 6px rgba(0, 153, 255, 0.25);
+  z-index: 45;
+  pointer-events: none;
+}
+
+.vp-bleed-tag.top {
+  top: 3px;
+}
+
+.vp-bleed-tag.bottom {
+  bottom: 3px;
+}
+
+@keyframes vpFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes vpFadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -6px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* Canvas content container */
+.vp-canvas-content {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* ================= FLOATING RICH TEXT STYLING TOOLBAR ================= */
+.vp-floating-text-toolbar {
+  position: relative;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 9999px;
+  padding: 6px 16px;
+  gap: 6px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
+  margin-bottom: 12px;
+  user-select: none;
+  animation: vpToolbarPop 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  width: max-content;
+  max-width: 95vw;
+  box-sizing: border-box;
+  align-self: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@keyframes vpToolbarPop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 1. Font Select */
+.vp-font-family-select-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.vp-font-select {
+  height: 32px;
+  padding: 0 28px 0 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  appearance: none;
+  outline: none;
+  transition: all 0.15s ease;
+  min-width: 105px;
+  box-sizing: border-box;
+}
+
+.vp-font-select:hover,
+.vp-font-select:focus {
+  border-color: #0099ff;
+  box-shadow: 0 0 0 2px rgba(0, 153, 255, 0.15);
+}
+
+.vp-select-chevron {
+  position: absolute;
+  right: 8px;
+  pointer-events: none;
+  color: #64748b;
+}
+
+/* 2. Font Size Controls: [-] [13 v] [+] */
+.vp-font-size-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: #f8fafc;
+  padding: 2px 4px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.vp-size-btn {
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #334155;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.vp-size-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.vp-size-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.vp-size-select {
+  height: 26px;
+  padding: 0 18px 0 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: center;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.vp-size-chevron {
+  position: absolute;
+  right: 5px;
+  pointer-events: none;
+  color: #64748b;
+}
+
+/* 3. Color Picker Swatch */
+.vp-color-picker-wrap {
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+
+.vp-color-swatch-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1.5px #64748b, inset 0 0 2px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  display: block;
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.vp-color-swatch-circle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 0 2px #0099ff;
+}
+
+.vp-hidden-color-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* 4. Toolbar Icon & Text Buttons */
+.vp-tb-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.vp-tb-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.vp-tb-btn.active {
+  background: #e0f2fe;
+  color: #0077cc;
+  font-weight: 700;
+}
+
+.vp-tb-text-btn {
+  height: 30px;
+  padding: 0 8px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.vp-tb-text-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.vp-tb-text-btn.active {
+  background: #e0f2fe;
+  color: #0077cc;
+}
+
+.vp-tb-divider {
+  width: 1px;
+  height: 20px;
+  background: #cbd5e1;
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+/* Popovers */
+.vp-popover-anchor {
+  position: relative;
+}
+
+.vp-style-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.14);
+  z-index: 100;
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: vpPopFade 0.15s ease;
+}
+
+@keyframes vpPopFade {
+  from { opacity: 0; transform: translate(-50%, -4px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.vp-popover-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.vp-popover-val {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #0077cc;
+  text-align: right;
+  margin-top: -2px;
+}
+
+.vp-style-popover button {
+  width: 100%;
+  text-align: left;
+  padding: 6px 10px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.vp-style-popover button:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.vp-style-popover button.selected,
+.vp-style-popover button.active {
+  background: #e0f2fe;
+  color: #0077cc;
+  font-weight: 600;
+}
+
+/* Toast */
+.vp-copy-toast {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0f172a;
+  color: #ffffff;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+  animation: vpPopFade 0.2s ease;
+}
+
+/* ================= CANVAS SELECTION BOX & HANDLES ================= */
+.vp-canvas-selection-box {
+  position: relative;
+  display: inline-block;
+  user-select: text;
+  cursor: pointer;
+  border: 1.5px dashed transparent;
+  border-radius: 2px;
+  transition: border-color 0.15s ease;
+  line-height: 1;
+}
+
+.vp-canvas-selection-box:hover {
+  border-color: rgba(0, 153, 255, 0.45);
+}
+
+.vp-canvas-selection-box.active-selected {
+  border: 1.5px solid #0099ff !important;
+  background: rgba(0, 153, 255, 0.03);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6);
+  z-index: 20;
+  cursor: move;
+}
+
+.vp-canvas-text-node {
+  display: inline-block;
+  outline: none;
+  cursor: text;
+  white-space: pre-wrap;
+  word-break: break-word;
+  transition: color 0.12s ease;
+}
+
+.vp-canvas-text-node.is-locked {
+  cursor: not-allowed;
+  user-select: none;
+}
+
+/* Mini Action Toolbar above Selected Element */
+.vp-element-mini-toolbar {
+  position: absolute;
+  top: -38px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 3px 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  z-index: 45;
+  white-space: nowrap;
+}
+
+.vp-mini-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.vp-mini-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.vp-mini-btn.locked {
+  background: #fff7ed;
+  color: #ea580c;
+}
+
+.vp-mini-btn.delete:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.vp-mini-more-wrap {
+  position: relative;
+}
+
+.vp-mini-more-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
+  z-index: 50;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vp-mini-more-menu button {
+  padding: 6px 8px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  text-align: left;
+  font-size: 0.75rem;
+  color: #334155;
+  cursor: pointer;
+}
+
+.vp-mini-more-menu button:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+/* 4 Corner Circular Selection Handles */
+.vp-selection-handle.corner {
+  width: 10px;
+  height: 10px;
+  background: #ffffff;
+  border: 1.5px solid #0099ff;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 35;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  user-select: none;
+  touch-action: none;
+}
+
+.vp-selection-handle.corner::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  left: -8px;
+  right: -8px;
+  border-radius: 50%;
+  cursor: inherit;
+}
+
+.vp-selection-handle.corner:hover {
+  background: #0099ff;
+  transform: scale(1.25);
+}
+
+.vp-selection-handle.corner.top-left {
+  top: -5px;
+  left: -5px;
+  cursor: nwse-resize;
+}
+
+.vp-selection-handle.corner.top-right {
+  top: -5px;
+  right: -5px;
+  cursor: nesw-resize;
+}
+
+.vp-selection-handle.corner.bottom-left {
+  bottom: -5px;
+  left: -5px;
+  cursor: nesw-resize;
+}
+
+.vp-selection-handle.corner.bottom-right {
+  bottom: -5px;
+  right: -5px;
+  cursor: nwse-resize;
+}
+
+/* 2 Side Pill Stretch Handles (Drag to adjust width) */
+.vp-selection-handle.side {
+  width: 8px;
+  height: 20px;
+  background: #ffffff;
+  border: 2px solid #0099ff;
+  border-radius: 4px;
+  position: absolute;
+  top: calc(50% - 10px);
+  z-index: 38;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  user-select: none;
+  touch-action: none;
+  cursor: ew-resize !important;
+}
+
+.vp-selection-handle.side::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  left: -8px;
+  right: -8px;
+  cursor: ew-resize !important;
+}
+
+.vp-selection-handle.side:hover {
+  background: #0099ff;
+  transform: scaleY(1.15);
+}
+
+.vp-selection-handle.side.middle-left {
+  left: -5px;
+  cursor: ew-resize !important;
+}
+
+.vp-selection-handle.side.middle-right {
+  right: -5px;
+  cursor: ew-resize !important;
+}
+
+/* Bottom Floating Action Badges: [✥ Move] [↻ Rotate] */
+.vp-element-bottom-handles {
+  position: absolute;
+  bottom: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 40;
+  user-select: none;
+}
+
+.vp-handle-circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1.5px solid #0099ff;
+  color: #0099ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: all 0.15s ease;
+  user-select: none;
+  touch-action: none;
+}
+
+.vp-handle-circle.vp-move-handle {
+  cursor: grab;
+}
+
+.vp-handle-circle.vp-move-handle:active {
+  cursor: grabbing;
+  background: #0099ff;
+  color: #ffffff;
+}
+
+.vp-handle-circle.vp-rotate-handle {
+  cursor: crosshair;
+}
+
+.vp-handle-circle.vp-rotate-handle:active {
+  background: #0099ff;
+  color: #ffffff;
+}
+
+.vp-handle-circle:hover {
+  background: #e0f2fe;
+  transform: scale(1.15);
+}
+
+/* Floating Bottom Zoom Controls Pill */
+.vp-studio-floating-zoom {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 9999px;
+  padding: 4px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  user-select: none;
+}
+
+.vp-zoom-btn {
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: #334155;
+  padding: 0 4px;
+}
+
+.vp-zoom-btn:hover {
+  color: #0099ff;
+}
+
+.vp-zoom-text {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #0f172a;
+  min-width: 44px;
+  text-align: center;
+}
+
+/* Floating Help Button (Bottom Right) */
+.vp-studio-floating-help {
+  position: absolute;
+  bottom: 24px;
+  right: 32px;
+  background: #ea580c;
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 8px 18px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
+  transition: all 0.15s ease;
+  z-index: 50;
+}
+
+.vp-studio-floating-help:hover {
+  background: #c2410c;
+  transform: translateY(-1px);
+}
+
+
+
+/* ================= ADJUSTABLE ARTWORK & LOGO STYLES ================= */
+.vp-adjustable-artwork-wrapper {
+  position: absolute;
+  user-select: none;
+  touch-action: none;
+  border: 1.5px dashed transparent;
+  border-radius: 6px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+}
+
+.vp-adjustable-artwork-wrapper:hover {
+  border-color: rgba(0, 153, 255, 0.6);
+}
+
+.vp-adjustable-artwork-wrapper.active-selected {
+  border: 1.5px solid #0099ff !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.9), 0 4px 18px rgba(0, 153, 255, 0.18);
+  z-index: 25;
+}
+
+/* Artwork Floating Mini Action Toolbar */
+.vp-artwork-mini-toolbar {
+  position: absolute;
+  top: -46px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 9999px;
+  padding: 4px 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.14), 0 1px 4px rgba(0, 0, 0, 0.06);
+  z-index: 60;
+  white-space: nowrap;
+}
+
+.vp-mini-scale-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #0284c7;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 4px;
+  padding: 2px 7px;
+  min-width: 42px;
+  text-align: center;
+  user-select: none;
+}
+
+.vp-mini-action-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 9999px;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.vp-mini-action-pill:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.vp-mini-action-pill.active {
+  background: #0284c7;
+  border-color: #0284c7;
+  color: #ffffff;
+}
+
+.vp-toolbar-divider {
+  width: 1px;
+  height: 18px;
+  background: #cbd5e1;
+  margin: 0 3px;
+}
+
+/* Sidebar Adjustment Panel Elements */
+.vp-adjust-panel-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vp-adjust-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vp-adjust-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.vp-adjust-val {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #0284c7;
+}
+
+.vp-adjust-slider {
+  width: 100%;
+  accent-color: #0099ff;
+  cursor: pointer;
+  height: 6px;
+  border-radius: 3px;
+}
+
+.vp-adjust-presets-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.vp-adjust-preset-btn {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.vp-adjust-preset-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.vp-adjust-preset-btn.active {
+  background: #e0f2fe;
+  border-color: #0284c7;
+  color: #0284c7;
+}
+
+.vp-align-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.vp-align-btn {
+  padding: 6px 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  color: #475569;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.12s ease;
+}
+
+.vp-align-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+

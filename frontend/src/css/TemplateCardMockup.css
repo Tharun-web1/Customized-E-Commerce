@@ -1,0 +1,601 @@
+/* Template Card Mockup Component CSS - Matches Vistaprint Official Aesthetic */
+.vp-template-container {
+  background: #f4f5f7;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px 16px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+.vp-template-container:hover {
+  transform: translateY(-4px);
+  border-color: #0056b3;
+  box-shadow: 0 12px 28px -6px rgba(0, 44, 95, 0.14), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
+}
+
+/* The actual physical business card canvas */
+.vp-card-canvas {
+  width: 100%;
+  aspect-ratio: 1.75 / 1; /* Official 3.5" x 2" ratio */
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: #1e293b;
+  transition: all 0.2s ease;
+}
+
+.vp-card-canvas.vertical {
+  aspect-ratio: 1 / 1.75;
+  max-width: 180px;
+  margin: 0 auto;
+}
+
+.vp-card-canvas.layout-image-template {
+  padding: 0 !important;
+  background: #f8fafc;
+}
+
+.vp-card-canvas.layout-image-template img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Swatches Row underneath */
+.vp-template-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding: 0 2px;
+}
+
+.vp-swatches-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vp-swatch-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.15s ease;
+  position: relative;
+  display: inline-block;
+  outline: none;
+}
+
+.vp-swatch-dot:hover {
+  transform: scale(1.18);
+}
+
+.vp-swatch-dot.active {
+  outline: 2px solid #0056b3;
+  outline-offset: 2px;
+}
+
+/* ================= LAYOUT 1: CLASSIC PHOTO / CORPORATE ================= */
+.layout-classic-photo {
+  background: #ffffff;
+  justify-content: space-between;
+}
+
+.l1-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.l1-brand-col {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.l1-photo-box {
+  width: 44px;
+  height: 44px;
+  background: #f1f5f9;
+  border: 1px dashed #94a3b8;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2px;
+  font-size: 0.44rem;
+  line-height: 1.1;
+  color: #64748b;
+}
+
+.l1-company-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.l1-company-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.l1-company-msg {
+  font-size: 0.52rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.l1-person-col {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+}
+
+.l1-person-name {
+  font-size: 0.74rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.l1-person-title {
+  font-size: 0.52rem;
+  color: #475569;
+  margin-top: 1px;
+}
+
+.l1-person-email {
+  font-size: 0.48rem;
+  color: #64748b;
+}
+
+.l1-divider-line {
+  height: 2px;
+  width: 100%;
+  margin: 6px 0;
+  opacity: 0.85;
+}
+
+.l1-bottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: 0.48rem;
+  color: #475569;
+  line-height: 1.25;
+}
+
+/* ================= LAYOUT 2: LUXURY BLACK & GOLD FILIGREE ================= */
+.layout-luxury-black-gold {
+  background: #08080a;
+  color: #d4af37;
+  text-align: center;
+  justify-content: space-between;
+  padding: 14px 12px;
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+}
+
+.l2-top-person {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.l2-person-name {
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.l2-person-title {
+  font-size: 0.52rem;
+  letter-spacing: 0.5px;
+  opacity: 0.85;
+  font-style: italic;
+  margin-top: 1px;
+}
+
+.l2-flourish-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.l2-flourish-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #d4af37, transparent);
+}
+
+.l2-flourish-icon {
+  display: flex;
+  align-items: center;
+  color: #d4af37;
+}
+
+.l2-company-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.l2-bottom-info {
+  font-size: 0.44rem;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+  line-height: 1.35;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ================= LAYOUT 3: CORPORATE DYNAMIC RED RIBBON ================= */
+.layout-corporate-red-ribbon {
+  background: #ffffff;
+  padding: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.l3-left-strip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 14px;
+  background: #cbd5e1;
+}
+
+.l3-top-section {
+  padding: 10px 14px 0 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.l3-person-name {
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.l3-person-title {
+  font-size: 0.54rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-top: 1px;
+}
+
+.l3-person-email {
+  font-size: 0.48rem;
+  color: #64748b;
+}
+
+.l3-ribbon-bar {
+  padding: 6px 14px 6px 24px;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  margin-left: 8px;
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+}
+
+.l3-company-name {
+  font-size: 0.86rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: 0.2px;
+}
+
+.l3-company-msg {
+  font-size: 0.48rem;
+  opacity: 0.9;
+}
+
+.l3-bottom-section {
+  padding: 0 14px 10px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: 0.46rem;
+  color: #475569;
+  line-height: 1.25;
+}
+
+.l3-web-link {
+  font-weight: 700;
+}
+
+/* ================= LAYOUT 4: ABSTRACT GEOMETRIC PRISMS ================= */
+.layout-modern-geometric {
+  background: #ffffff;
+  padding: 10px 14px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.l4-geometric-shapes {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 48%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.l4-poly-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(0 0, 70% 0, 100% 50%, 40% 100%, 0 100%);
+  opacity: 0.65;
+}
+
+.l4-poly-2 {
+  position: absolute;
+  top: 15%;
+  left: 10%;
+  width: 80%;
+  height: 70%;
+  clip-path: polygon(0 20%, 90% 50%, 0 80%);
+  opacity: 0.35;
+}
+
+.l4-poly-3 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 45%;
+  height: 50%;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  opacity: 0.45;
+}
+
+.l4-top-row {
+  display: flex;
+  justify-content: flex-end;
+  text-align: right;
+  z-index: 2;
+}
+
+.l4-company-name {
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.l4-company-sub {
+  font-size: 0.48rem;
+  color: #64748b;
+  margin-top: 1px;
+}
+
+.l4-bottom-row {
+  display: flex;
+  justify-content: flex-end;
+  text-align: right;
+  z-index: 2;
+  font-size: 0.46rem;
+  color: #475569;
+  line-height: 1.25;
+}
+
+.l4-person-name {
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.l4-person-title {
+  font-size: 0.5rem;
+  color: #64748b;
+  margin-bottom: 3px;
+}
+
+/* ================= LAYOUT 5: MEDICAL CARE ================= */
+.layout-medical-care {
+  background: #ffffff;
+  justify-content: space-between;
+  padding: 12px 14px;
+}
+
+.l5-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.l5-cross-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 900;
+  font-size: 1.1rem;
+}
+
+/* ================= LAYOUT 6: LEGAL CREST ================= */
+.layout-legal-crest {
+  background: #fafaf9;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: inset 0 0 0 4px #fafaf9, inset 0 0 0 5px #1e293b;
+  justify-content: space-between;
+  padding: 12px 16px;
+  text-align: center;
+}
+
+/* Generic Fallback */
+.layout-generic-modern {
+  background: #ffffff;
+  justify-content: space-between;
+  padding: 12px 14px;
+}
+
+/* ================= LAYOUT 7: EXECUTIVE SPLIT & ACCENT SWOOSH ================= */
+.layout-executive-swoosh {
+  background: #ffffff;
+  padding: 10px 12px;
+  position: relative;
+  overflow: hidden;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+.l7-left-col {
+  flex: 1.15;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 2;
+  padding-right: 6px;
+  min-width: 0;
+}
+
+.l7-person-name {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #1e1b4b;
+  line-height: 1.15;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.l7-person-title {
+  font-size: 0.44rem;
+  font-weight: 600;
+  color: #334155;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.l7-dual-underline {
+  display: flex;
+  width: 75%;
+  height: 2px;
+  margin-top: 3px;
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.l7-contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5px;
+  margin-top: 6px;
+  font-size: 0.38rem;
+  color: #1e293b;
+}
+
+.l7-contact-row {
+  display: flex;
+  align-items: center;
+  gap: 3.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.l7-contact-icon {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #004b93;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5.5px;
+  flex-shrink: 0;
+}
+
+.l7-center-divider {
+  width: 1.5px;
+  background: #eab308;
+  margin: 2px 0;
+  align-self: stretch;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+.l7-right-col {
+  flex: 0.95;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 2;
+  padding-left: 6px;
+  min-width: 0;
+}
+
+.l7-logo-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 28px;
+}
+
+.l7-bullets-area {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 4px 0 0 6px;
+  font-size: 0.42rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.l7-bullet-item {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+}
+
+.l7-swoosh-svg {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 52%;
+  height: auto;
+  pointer-events: none;
+  z-index: 1;
+}
+

@@ -1,0 +1,355 @@
+/* ================= FRESH FULL-PAGE "FINAL STEPS" SCREEN ================= */
+.vp-final-steps-page {
+  position: fixed;
+  inset: 0;
+  z-index: 99990;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  font-family: inherit;
+}
+
+.vp-final-steps-header {
+  height: 56px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 44px;
+  flex-shrink: 0;
+}
+
+.vp-final-steps-logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.vp-final-steps-brand-name {
+  font-size: 21px;
+  font-weight: 800;
+  color: #111827;
+  letter-spacing: -0.5px;
+}
+
+.vp-final-steps-help-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #111827;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.vp-final-steps-help-wrap span {
+  text-decoration: underline;
+}
+
+.vp-final-steps-main {
+  flex: 1;
+  display: flex;
+  height: calc(100vh - 56px - 84px);
+  overflow: hidden;
+}
+
+.vp-final-steps-left-col {
+  flex: 1.25;
+  background: #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 20px;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  border-right: 1px solid #e5e7eb;
+}
+
+.vp-final-steps-right-col {
+  flex: 1;
+  background: #ffffff;
+  padding: 36px 52px 48px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.vp-final-steps-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 10px 0;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.vp-final-steps-subtitle {
+  font-size: 0.92rem;
+  color: #374151;
+  margin: 0 0 28px 0;
+  line-height: 1.45;
+}
+
+.vp-final-steps-field-group {
+  margin-bottom: 28px;
+}
+
+.vp-final-steps-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.vp-final-steps-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.vp-final-steps-link-btn {
+  background: none;
+  border: none;
+  color: #0f172a;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+.vp-final-steps-link-btn:hover {
+  color: #0284c7;
+}
+
+.vp-final-steps-hint {
+  margin: 0 0 10px 0;
+  font-size: 0.84rem;
+  color: #64748b;
+}
+
+.vp-final-steps-select-wrapper {
+  position: relative;
+}
+
+.vp-final-steps-select {
+  width: 100%;
+  padding: 11px 14px;
+  font-size: 0.96rem;
+  font-weight: 500;
+  color: #0f172a;
+  border: 1px solid #0f172a;
+  border-radius: 6px;
+  appearance: none;
+  background: #ffffff;
+  cursor: pointer;
+  outline: none;
+}
+
+.vp-final-steps-select:focus {
+  border-color: #0099ff;
+  box-shadow: 0 0 0 3px rgba(0, 153, 255, 0.15);
+}
+
+.vp-final-steps-select-chevron {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #0f172a;
+}
+
+.vp-final-steps-min-note {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.vp-stock-option-card {
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  transition: all 0.15s ease;
+}
+
+.vp-stock-option-card:hover {
+  border-color: #94a3b8;
+}
+
+.vp-stock-option-card.selected {
+  border: 2px solid #0099ff;
+  background: #f0f9ff;
+}
+
+.vp-stock-card-thumb {
+  width: 52px;
+  height: 34px;
+  border-radius: 3px;
+  position: relative;
+  flex-shrink: 0;
+  margin-top: 4px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 3px 4px;
+  box-sizing: border-box;
+}
+
+.vp-stock-thumb-glossy {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  box-shadow: 0 4px 10px rgba(2, 132, 199, 0.35);
+}
+
+.vp-stock-thumb-matte {
+  background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.vp-stock-thumb-sheen {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 30px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.45);
+  transform: rotate(25deg);
+}
+
+.vp-stock-thumb-logo {
+  font-size: 9px;
+  color: #ffffff;
+  font-weight: 800;
+  opacity: 0.85;
+}
+
+.vp-stock-card-details {
+  flex: 1;
+}
+
+.vp-stock-card-name {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 2px 0;
+}
+
+.vp-stock-card-desc {
+  font-size: 0.84rem;
+  color: #475569;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+.vp-stock-card-bullets {
+  margin: 0;
+  padding-left: 14px;
+  font-size: 0.8rem;
+  color: #475569;
+  line-height: 1.55;
+}
+
+.vp-final-steps-bottom-bar {
+  height: 84px;
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+  padding: 0 48px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 36px;
+  flex-shrink: 0;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.03);
+}
+
+.vp-final-steps-price-block {
+  text-align: right;
+}
+
+.vp-final-steps-total-price {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.1;
+}
+
+.vp-final-steps-unit-price {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.vp-final-steps-delivery-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: #0f172a;
+  margin-top: 3px;
+}
+
+.vp-final-steps-delivery-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #0f172a;
+  font-size: 0.8rem;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 4px;
+}
+
+.vp-final-steps-delivery-link:hover {
+  color: #0284c7;
+}
+
+.vp-final-steps-add-cart-btn {
+  background: #56c5f5;
+  color: #0f172a;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 34px;
+  font-size: 0.96rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(86, 197, 245, 0.4);
+  transition: all 0.15s ease;
+}
+
+.vp-final-steps-add-cart-btn:hover {
+  background: #3bbbf3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(86, 197, 245, 0.5);
+}
+
+.vp-final-steps-add-cart-btn:active {
+  transform: translateY(0);
+}
+
+/* Guide style for unedited template text placeholders in the editor canvas */
+.vp-canvas-text-node.is-placeholder-guide {
+  opacity: 0.38 !important;
+  font-style: italic !important;
+  filter: grayscale(35%);
+  user-select: none;
+}
+
+.vp-canvas-selection-box.active-selected .vp-canvas-text-node.is-placeholder-guide {
+  opacity: 0.65 !important;
+}
+
+

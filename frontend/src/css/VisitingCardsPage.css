@@ -1,0 +1,609 @@
+/* ==========================================================================
+   VISITING CARDS DEDICATED PAGE
+   ========================================================================== */
+
+.vc-page-container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 16px 24px 60px 24px;
+  width: 100%;
+}
+
+/* 1. Breadcrumbs */
+.vc-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 16px;
+}
+
+.vc-breadcrumb-link {
+  color: #0f172a;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  transition: color 0.15s ease;
+}
+
+.vc-breadcrumb-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.vc-breadcrumb-separator {
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.vc-breadcrumb-current {
+  color: #475569;
+  font-weight: 600;
+}
+
+/* 2. Hero Banner (Dark Navy - Matches Vistaprint Screenshot) */
+.vc-hero-banner {
+  background: #1a273b;
+  background: linear-gradient(105deg, #132237 0%, #1a273b 50%, #162438 100%);
+  border-radius: 6px;
+  color: #ffffff;
+  padding: 44px 48px;
+  min-height: 270px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(10, 25, 45, 0.12);
+}
+
+.vc-hero-left {
+  flex: 1;
+  max-width: 600px;
+  z-index: 2;
+}
+
+.vc-hero-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.vc-hero-subtitle {
+  font-size: 0.96rem;
+  line-height: 1.55;
+  color: #cbd5e1;
+  margin-bottom: 26px;
+  font-weight: 400;
+}
+
+.vc-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.vc-btn-white {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid #ffffff;
+  border-radius: 4px;
+  padding: 10px 22px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.vc-btn-white:hover {
+  background: #f1f5f9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.vc-btn-outline {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 4px;
+  padding: 10px 22px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.vc-btn-outline:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.vc-hero-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.vc-hero-image-wrapper {
+  max-width: 480px;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.45);
+  transition: transform 0.3s ease;
+}
+
+.vc-hero-image-wrapper:hover {
+  transform: scale(1.02);
+}
+
+.vc-hero-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* 3. Navigation Tabs */
+.vc-nav-tabs-wrapper {
+  margin-top: 36px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.vc-nav-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.vc-nav-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.vc-tab-btn {
+  padding: 12px 20px;
+  font-size: 0.94rem;
+  font-weight: 600;
+  color: #64748b;
+  border: none;
+  background: none;
+  cursor: pointer;
+  position: relative;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.vc-tab-btn:hover {
+  color: #0f172a;
+}
+
+.vc-tab-btn.active {
+  color: #0056b3;
+}
+
+.vc-tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: #0056b3;
+  border-radius: 3px 3px 0 0;
+}
+
+/* 4. Sections */
+.vc-section {
+  margin-top: 32px;
+}
+
+.vc-section-header {
+  margin-bottom: 22px;
+}
+
+.vc-section-heading {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+.vc-section-subtext {
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+/* 5. Product Cards Grid (4 columns like screenshot) */
+.vc-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px 20px;
+}
+
+/* 3-Column Shapes Grid (Standard, Classic, Custom Shape) */
+.vc-cards-grid.vc-shapes-grid {
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 1080px;
+}
+
+@media (max-width: 1100px) {
+  .vc-cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .vc-cards-grid.vc-shapes-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .vc-hero-banner {
+    flex-direction: column;
+    padding: 32px 24px;
+  }
+  .vc-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .vc-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 6. Product Card Component */
+.vc-product-card {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vc-product-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Visual Mockup Box */
+.vc-card-visual {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1.25 / 1;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+}
+
+.vc-product-card:hover .vc-card-visual {
+  box-shadow: 0 10px 22px -6px rgba(0, 0, 0, 0.12);
+}
+
+/* Badge */
+.vc-card-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #0284c7;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  z-index: 4;
+  letter-spacing: 0.02em;
+}
+
+.vc-card-gsm-tag {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  z-index: 4;
+}
+
+/* Wishlist Heart Button */
+.vc-wishlist-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  z-index: 4;
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.vc-wishlist-btn:hover {
+  transform: scale(1.1);
+  background-color: #f8fafc;
+}
+
+.vc-wishlist-btn.active {
+  border-color: #fecdd3;
+  background-color: #fff1f2;
+}
+
+/* 7. Card Mockup Inner (Realistic 3D Card Look) */
+.vc-card-mockup-inner {
+  width: 65%;
+  height: 60%;
+  background: #ffffff;
+  box-shadow: 
+    0 8px 16px -4px rgba(0, 0, 0, 0.12),
+    0 2px 6px -1px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  transition: transform 0.25s ease;
+  transform: rotate(-3deg);
+}
+
+.vc-product-card:hover .vc-card-mockup-inner {
+  transform: rotate(0deg) scale(1.05);
+}
+
+/* Mockup Content Styling */
+.vc-mockup-branding {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.mockup-brand-text {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+
+.mockup-logo-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  margin-bottom: 2px;
+}
+
+.mockup-logo-icon.standard {
+  background: #ea580c;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+.mockup-logo-icon.classic {
+  background: #e11d48;
+  border-radius: 50%;
+}
+
+.mockup-tree-icon {
+  width: 16px;
+  height: 16px;
+  background: #16a34a;
+  mask: radial-gradient(circle, #000 60%, transparent 60%);
+  border-radius: 50%;
+}
+
+.mockup-badge-pill {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #b45309;
+  background: #fef3c7;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.mockup-lines {
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+}
+
+.m-line {
+  height: 2px;
+  background: #cbd5e1;
+  border-radius: 2px;
+}
+
+.m-line.full {
+  width: 60%;
+}
+
+.m-line.half {
+  width: 35%;
+}
+
+/* 8. Card Info Details */
+.vc-card-info {
+  padding-top: 12px;
+}
+
+.vc-card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 6px;
+  line-height: 1.25;
+}
+
+.vc-product-card:hover .vc-card-title {
+  color: #0056b3;
+}
+
+.vc-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.vc-stars {
+  display: flex;
+  gap: 1px;
+}
+
+.vc-rating-score {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-left: 2px;
+}
+
+.vc-rating-count {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.vc-price-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.vc-main-price {
+  font-size: 0.94rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.vc-sub-price {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+/* ================= Studio Customizer Modal ================= */
+.studio-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeIn 0.2s ease;
+}
+
+.studio-modal-container {
+  background: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 1200px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  animation: scaleUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.studio-modal-header {
+  padding: 18px 28px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+}
+
+.studio-modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #002c5f;
+  margin: 0;
+}
+
+.studio-modal-subtitle {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.studio-modal-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #64748b;
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.studio-modal-close:hover {
+  background: #fee2e2;
+  color: #ef4444;
+  border-color: #fca5a5;
+}
+
+.studio-modal-body {
+  overflow-y: auto;
+  padding: 24px 28px;
+  flex: 1;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

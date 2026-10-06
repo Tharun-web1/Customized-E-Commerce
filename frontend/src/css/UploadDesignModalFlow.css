@@ -1,0 +1,590 @@
+/* ==========================================================================
+   UPLOAD DESIGN MODAL FLOW STYLING (MATCHING SCREENSHOT 2 & SCREENSHOT 3)
+   ========================================================================== */
+
+/* Backdrop overlay */
+.udm-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: udmFadeIn 0.2s ease-out;
+}
+
+@keyframes udmFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Modal Box Container */
+.udm-modal-box {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.22), 0 4px 16px rgba(0, 0, 0, 0.1);
+  position: relative;
+  width: 100%;
+  max-height: 92vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  animation: udmScaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes udmScaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Compact size for Step 1 (Image 2) */
+.udm-modal-box.compact {
+  max-width: 460px;
+  padding: 32px 36px 36px 36px;
+}
+
+/* Wide size for Step 2 (Image 3) */
+.udm-modal-box.wide {
+  max-width: 880px;
+  padding: 32px 36px 36px 36px;
+}
+
+/* Close 'X' Button at top-right */
+.udm-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #f1f5f9;
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  z-index: 10;
+}
+
+.udm-close-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+/* ==========================================================================
+   STEP 1: OPTIONS MODAL (MATCHING IMAGE 2)
+   ========================================================================== */
+
+.udm-options-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.udm-options-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.5px;
+}
+
+.udm-options-subtext {
+  font-size: 14px;
+  color: #475569;
+  margin: 0 0 24px 0;
+}
+
+/* Field Group */
+.udm-field-group {
+  margin-bottom: 22px;
+}
+
+.udm-field-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 10px;
+}
+
+/* Orientation Pills */
+.udm-orientation-cards-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.udm-orientation-pill {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.udm-orientation-pill:hover {
+  border-color: #94a3b8;
+  background: #f8fafc;
+}
+
+.udm-orientation-pill.selected {
+  border-color: #0284c7;
+  background: #f0f9ff;
+  color: #0284c7;
+  box-shadow: 0 0 0 1px #0284c7;
+}
+
+/* Quantity Select */
+.udm-select-wrapper {
+  position: relative;
+}
+
+.udm-quantity-select {
+  width: 100%;
+  appearance: none;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 13px 40px 13px 16px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #0f172a;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.udm-quantity-select:focus {
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.udm-select-chevron {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  pointer-events: none;
+}
+
+/* Subtle Divider Line */
+.udm-divider {
+  border: none;
+  height: 1px;
+  background: #e2e8f0;
+  margin: 28px 0 20px 0;
+}
+
+/* Pricing Summary */
+.udm-summary-row {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1e293b;
+  margin-bottom: 24px;
+}
+
+/* Next Button (Matching Sky Blue in Image 2) */
+.udm-btn-next-cyan {
+  width: 100%;
+  background: #58c1ea;
+  border: none;
+  color: #ffffff;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+  box-shadow: 0 4px 12px rgba(88, 193, 234, 0.35);
+}
+
+.udm-btn-next-cyan:hover {
+  background: #41b4e2;
+}
+
+.udm-btn-next-cyan:active {
+  transform: scale(0.99);
+}
+
+/* ==========================================================================
+   STEP 2: UPLOAD MODAL (MATCHING IMAGE 3)
+   ========================================================================== */
+
+.udm-upload-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.udm-upload-header {
+  margin-bottom: 24px;
+}
+
+.udm-upload-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.udm-upload-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 28px;
+  align-items: stretch;
+}
+
+/* Left Dropzone Area */
+.udm-dropzone-box {
+  background: #f8fafc;
+  border: 2px dashed #cbd5e1;
+  border-radius: 16px;
+  padding: 48px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 380px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.udm-dropzone-box.drag-over {
+  border-color: #0284c7;
+  background: #f0f9ff;
+  box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.15);
+}
+
+.udm-dropzone-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 280px;
+}
+
+/* Blue Device Upload Pill Button */
+.udm-btn-device-upload {
+  width: 100%;
+  background: #58c1ea;
+  color: #ffffff;
+  border: none;
+  border-radius: 30px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(88, 193, 234, 0.35);
+  transition: all 0.15s ease;
+}
+
+.udm-btn-device-upload:hover {
+  background: #41b4e2;
+  transform: translateY(-1px);
+}
+
+/* White Phone Upload Pill Button */
+.udm-btn-phone-upload {
+  width: 100%;
+  background: #ffffff;
+  color: #1e293b;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 30px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.udm-btn-phone-upload:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.udm-dropzone-caption {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* Phone QR Popover */
+.udm-phone-qr-popup {
+  position: absolute;
+  inset: 16px;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  z-index: 5;
+}
+
+.udm-qr-box {
+  background: #ffffff;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.udm-qr-caption {
+  font-size: 12px;
+  color: #475569;
+  max-width: 240px;
+  line-height: 1.4;
+  margin-bottom: 14px;
+}
+
+.udm-qr-close {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #1e293b;
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Right Sidebar: Specs and Thumbnails */
+.udm-upload-sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+.udm-specs-accordion {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #ffffff;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.udm-specs-toggle-btn {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  color: #1e293b;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.15s ease;
+}
+
+.udm-specs-toggle-btn:hover {
+  background: #f8fafc;
+}
+
+.udm-specs-toggle-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #0f172a;
+}
+
+.udm-specs-detail-panel {
+  padding: 12px 16px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  font-size: 12px;
+}
+
+.udm-spec-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.udm-spec-row:last-child {
+  border-bottom: none;
+}
+
+.udm-spec-name {
+  color: #64748b;
+}
+
+.udm-spec-val {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.udm-sidebar-caption {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+}
+
+/* Sides Container: Front and Back Slots */
+.udm-sides-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.udm-side-slot {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.udm-side-slot:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.udm-side-slot.active {
+  border-color: #0284c7;
+  background: #f0f9ff;
+  box-shadow: 0 0 0 1px #0284c7;
+}
+
+.udm-side-slot.has-file {
+  border-color: #16a34a;
+}
+
+.udm-card-preview-thumb {
+  background: #f1f5f9;
+  border: 1px dashed #cbd5e1;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.udm-card-preview-thumb.horizontal {
+  width: 100%;
+  aspect-ratio: 8.9 / 5.1;
+}
+
+.udm-card-preview-thumb.vertical {
+  width: 70%;
+  aspect-ratio: 5.1 / 8.9;
+}
+
+.udm-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.udm-thumb-placeholder {
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.udm-side-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.udm-side-filename {
+  font-size: 11px;
+  color: #64748b;
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+/* Sidebar Footer Buttons */
+.udm-sidebar-footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.udm-btn-proceed-studio {
+  background: #0284c7;
+  color: #ffffff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+}
+
+.udm-btn-proceed-studio:hover {
+  background: #0369a1;
+}
+
+.udm-btn-back-options {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  padding: 4px;
+}
+
+.udm-btn-back-options:hover {
+  color: #0f172a;
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .udm-upload-grid {
+    grid-template-columns: 1fr;
+  }
+  .udm-dropzone-box {
+    min-height: 240px;
+    padding: 32px 16px;
+  }
+}

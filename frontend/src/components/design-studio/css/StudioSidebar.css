@@ -1,0 +1,450 @@
+/* ================= 2. MAIN WORKSPACE LAYOUT ================= */
+.vp-studio-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
+
+/* --- SUB-COLUMN 1: ICON TOOLBAR --- */
+.vp-studio-icon-toolbar {
+  width: 72px;
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+  gap: 4px;
+  flex-shrink: 0;
+  user-select: none;
+  overflow-y: auto;
+}
+
+.vp-studio-tool-item {
+  width: 62px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 4px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #475569;
+  transition: all 0.15s ease;
+  gap: 4px;
+}
+
+.vp-studio-tool-item span {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.1;
+}
+
+.vp-studio-tool-item:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.vp-studio-tool-item.active {
+  background: #e0f2fe;
+  color: #0077cc;
+}
+
+.vp-studio-tool-item.active svg {
+  stroke: #0077cc;
+}
+
+/* --- SUB-COLUMN 2: EDIT PROPERTIES PANEL --- */
+.vp-studio-properties-panel {
+  width: 330px;
+  min-width: 260px;
+  max-width: 540px;
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+/* Draggable Vertical Border Resizer */
+.vp-panel-resizer {
+  width: 8px;
+  margin-left: -4px;
+  cursor: col-resize;
+  position: relative;
+  background: transparent;
+  flex-shrink: 0;
+  z-index: 28;
+  user-select: none;
+  transition: background 0.15s ease;
+}
+
+.vp-panel-resizer:hover,
+.vp-panel-resizer.is-dragging {
+  background: rgba(0, 153, 255, 0.25);
+}
+
+.vp-panel-resizer .vp-resizer-line {
+  width: 2px;
+  height: 100%;
+  margin: 0 auto;
+  background: #e2e8f0;
+  transition: background 0.15s ease;
+}
+
+.vp-panel-resizer:hover .vp-resizer-line,
+.vp-panel-resizer.is-dragging .vp-resizer-line {
+  background: #0099ff;
+}
+
+.vp-studio-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.vp-studio-panel-header h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.vp-studio-panel-body {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.vp-studio-add-text-btn {
+  width: 100%;
+  background: #e0f2fe;
+  border: 1.5px solid #0099ff;
+  border-radius: 9999px;
+  color: #0056b3;
+  font-size: 0.84rem;
+  font-weight: 700;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.vp-studio-add-text-btn:hover {
+  background: #bae6fd;
+}
+
+.vp-studio-text-inputs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vp-studio-input-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  position: relative;
+}
+
+.vp-studio-input-label {
+  font-size: 0.72rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.vp-studio-text-input {
+  border: none;
+  border-bottom: 1px solid #cbd5e1;
+  background: transparent;
+  padding: 4px 0 6px;
+  font-size: 0.88rem;
+  color: #0f172a;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.vp-studio-text-input:focus {
+  border-bottom-color: #0099ff;
+  box-shadow: 0 1px 0 0 #0099ff;
+}
+
+.vp-studio-input-wrap.active .vp-studio-text-input {
+  border-bottom-color: #0099ff;
+  color: #0056b3;
+  font-weight: 600;
+}
+
+
+
+/* ================= GRAPHICS, BACKGROUNDS & MORE PANELS ================= */
+
+/* Graphics Search & Filter Tabs */
+.vp-search-input-wrap {
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.vp-search-input-wrap input {
+  width: 100%;
+  padding: 8px 10px 8px 32px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #0f172a;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.vp-search-input-wrap input:focus {
+  border-color: #0099ff;
+  box-shadow: 0 0 0 2px rgba(0, 153, 255, 0.2);
+}
+
+.vp-search-icon-inside {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.vp-filter-tabs-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-bottom: 2px;
+  margin-bottom: 12px;
+}
+
+.vp-filter-tab-pill {
+  padding: 5px 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.vp-filter-tab-pill:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.vp-filter-tab-pill.active {
+  background: #0099ff;
+  border-color: #0099ff;
+  color: #ffffff;
+}
+
+/* Graphics Grid (Icons & Shapes) */
+.vp-graphics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  max-height: calc(100vh - 240px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 2px;
+  box-sizing: border-box;
+}
+
+.vp-graphic-card-btn {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.vp-graphic-card-btn:hover {
+  border-color: #0099ff;
+  background: #f0f9ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 153, 255, 0.15);
+}
+
+.vp-graphic-card-btn span {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #475569;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  width: 100%;
+  display: block;
+}
+
+.vp-graphic-card-btn:hover span {
+  color: #0284c7;
+}
+
+/* Background Swatches Grid */
+.vp-bg-swatches-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.vp-bg-swatch-card {
+  height: 48px;
+  border-radius: 6px;
+  border: 1.5px solid #cbd5e1;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.08);
+}
+
+.vp-bg-swatch-card:hover {
+  transform: scale(1.08);
+  border-color: #0099ff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+  z-index: 2;
+}
+
+.vp-bg-swatch-card.active {
+  border-color: #0099ff !important;
+  outline: 2px solid #0099ff;
+  outline-offset: 1px;
+}
+
+/* Background Patterns Grid */
+.vp-patterns-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.vp-pattern-card {
+  padding: 8px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.vp-pattern-card:hover {
+  border-color: #0099ff;
+  background: #f0f9ff;
+}
+
+.vp-pattern-card.active {
+  border-color: #0099ff;
+  background: #e0f2fe;
+}
+
+.vp-pattern-title {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.vp-pattern-desc {
+  font-size: 0.62rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+/* Patterns rendered directly on the Card Canvas */
+.vp-card-bg-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.vp-card-bg-pattern.pattern-dots {
+  background-image: radial-gradient(#64748b 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.vp-card-bg-pattern.pattern-grid {
+  background-image: linear-gradient(to right, #64748b 1px, transparent 1px), linear-gradient(to bottom, #64748b 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.vp-card-bg-pattern.pattern-stripes {
+  background-image: repeating-linear-gradient(45deg, #64748b, #64748b 1px, transparent 1px, transparent 12px);
+}
+
+.vp-card-bg-pattern.pattern-mesh {
+  background-image: radial-gradient(at 0% 0%, rgba(0, 153, 255, 0.25) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(22, 163, 74, 0.2) 0px, transparent 50%);
+}
+
+/* More Options / QR Panel Styling */
+.vp-more-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.vp-qr-preview-box {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.vp-checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.76rem;
+  color: #334155;
+  padding: 6px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.vp-checklist-item:last-child {
+  border-bottom: none;
+}
+
